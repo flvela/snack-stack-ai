@@ -1,0 +1,66 @@
+[
+  {
+    "Dish": "Margherita Pizza",
+    "Cuisine": "Italian",
+    "Price": 299,
+    "Rating": 4.7,
+    "Dietary": "Veg",
+    "Description": "Classic thin crust with tomato, mozzarella, basil"
+  },
+  {
+    "Dish": "Vegan Pasta Primavera",
+    "Cuisine": "Italian",
+    "Price": 349,
+    "Rating": 4.5,
+    "Dietary": "Vegan",
+    "Description": "Penne with seasonal vegetables, olive oil, garlic"
+  },
+  {
+    "Dish": "Butter Chicken",
+    "Cuisine": "Indian",
+    "Price": 379,
+    "Rating": 4.9,
+    "Dietary": "GF",
+    "Description": "Creamy tomato curry with tender chicken and naan"
+  },
+  {
+    "Dish": "Vegan Buddha Bowl",
+    "Cuisine": "Fusion",
+    "Price": 319,
+    "Rating": 4.6,
+    "Dietary": "Vegan/GF",
+    "Description": "Quinoa, chickpeas, avocado, greens, tahini"
+  },
+  {
+    "Dish": "Classic Cheeseburger",
+    "Cuisine": "American",
+    "Price": 259,
+    "Rating": 4.4,
+    "Dietary": "None",
+    "Description": "Beef patty, cheddar, lettuce, tomato, brioche bun"
+  },
+  {
+    "Dish": "Paneer Tikka",
+    "Cuisine": "Indian",
+    "Price": 199,
+    "Rating": 4.8,
+    "Dietary": "Veg/GF",
+    "Description": "Tandoor-grilled cottage cheese with peppers"
+  },
+  {
+    "Dish": "Aglio e Olio",
+    "Cuisine": "Italian",
+    "Price": 279,
+    "Rating": 4.5,
+    "Dietary": "Vegan",
+    "Description": "Spaghetti with garlic, chilli, olive oil, parsley"
+  },
+  {
+    "Dish": "Mango Lassi",
+    "Cuisine": "Indian",
+    "Price": 99,
+    "Rating": 4.7,
+    "Dietary": "Veg/GF",
+    "Description": "Blended yogurt with Alphonso mango, cardamom"
+  }
+]
