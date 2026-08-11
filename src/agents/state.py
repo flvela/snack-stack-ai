@@ -20,7 +20,7 @@ USER_INPUT_FIELD = "user_input"
 ROUTE_FIELD = "route"
 MENU_AGENT_OUTPUT_FIELD = "menu_agent_output"
 ORDER_AGENT_OUTPUT_FIELD = "order_agent_output"
-FINAL_RESPONSE = "final_response"
+FINAL_RESPONSE_FIELD = "final_response"
 
 class SnackStackState(TypedDict):
   """ Class defining the Graph State for the SnackStack assisstant. It will be updated by each node in the graph"""
