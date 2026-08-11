@@ -93,9 +93,9 @@ EMBEDDINGS_MODEL_PROVIDER=huggingface
 EMBEDDINGS_MODEL_API_KEY=your_hugging_face_api_key
 EMBEDDINGS_MODEL=google/embeddinggemma-300m
 ```
->&#128161; Model providers are based on [LangChain providers](https://reference.langchain.com/python/langchain/chat_models/base/init_chat_model). Currently only anthropic and openai are tested. 
+>&#128161; Model providers are based on [LangChain providers](https://reference.langchain.com/python/langchain/chat_models/base/init_chat_model#parameters). Currently only anthropic and openai are tested. 
 
->&#128161; Embeddings providers are based on [LangChain providers](https://reference.langchain.com/python/langchain/embeddings/base/init_embeddings). Currently only hugging face and openai implemented.
+>&#128161; Embeddings providers are based on [LangChain providers](https://reference.langchain.com/python/langchain/embeddings/base/init_embeddings#parameters). Currently only hugging face and openai implemented.
 
 To test your config see [unit tests](#6-Run-Tests)
 
@@ -124,4 +124,44 @@ pytest tests/tools/test_config.py
 #### 6.2 Run All tests
 ```bash
 pytest
+```
+
+## Project Structure
+```
+SNACK-STACK-AI/                   #entire application
+  data/                           #contains sample data used by AI assisstant
+    menu.json                     #sample menu items
+    orders.json                   #sample orders
+  src/                            #python source code
+    agents/                       #python code related to LangGraph node, context schema and state
+      __init__.py                 #package init file
+      context_schema.py           #LangGraph runtime context schema defining shared objects used by the nodes (ie. llm, tools, etc...)
+      menu_agent.py               #menu agent and prompt
+      orchestrator.py             #orchestrator agent and prompt
+      order_agent.py              #order agent and prompt
+      synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
+      state.py                    #the shared state that is passed between the LangGraph Nodes
+    tools/                        #tools used for the agents to import sample data and config
+      __init__.py                 #package init file
+      config.py                   #gets the embeddings and chat model from the config .env file
+      menu.py                     #loads the menu sample items and provides the LangGraph menu search tool
+      orders.py                   #loads the orders sample items and provides the LangGraph orders search tool
+      vector_store.py             #Chroma DB store functionality for local persistence
+    __init__.py                   #package init file
+  tests/                          #python unit tests using pytest
+    agents/                       #agent unit tests 
+      test_menu_agent.py          #menu agent tests
+      test_orchestrator.py        #orchestrator agent tests
+      test_order_agent.py         #order agent tests
+      test_synthesizer.py         #synthesizer agent tests
+    tools/                        #tools unit tests
+      test_config.py              #config unit tests
+      test_menu.py                #menu unit tests
+      test_orders.py              #orders unit tests
+      test_vector_store.py        #vector store unit tests
+  .env.example                    #example config file
+  .gitignore                      #git ignore file
+  LICENSE                         #license information
+  pyproject.toml                  #python project file
+  README.md                       #this file 
 ```
