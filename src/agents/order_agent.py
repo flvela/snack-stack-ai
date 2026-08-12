@@ -7,12 +7,16 @@ from agents.state import MESSAGES_FIELD, ORDER_AGENT_OUTPUT_FIELD, REQUIRES_SYNT
 
 order_instructions = """
 You are an order agent. Your job is to answer order questions about orders for our restaurant.
-You can use *search_order_catalog* tool to fetch order data by order_id, email and tracking number.
+You can use the following tools:
+*search_order_catalog* tool to fetch order data by order_id, email and tracking number.
+*get_user_input* tool to fetch the order key data from the user.
+Tool selection rules:
+- If user did not provide order_id, email or tracking number call *get_user_input* tool 
+- If user provides order_id, email or tracking number call *search_order_catalog* tool
 Output rules:
 - Provide order(s) information based on the data retrieved using the *search_order_catalog* only.
 - If order(s) are not found. Say that the order number, email or tracking number has no associated orders.
-- order id and tracking id are unique.
-- email id can return multiple orders. In this case you can display all orders and ask which one they want more details on.
+- order id and tracking id are unique, email id can return multiple orders. 
 """
 
 def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> SnackStackState:

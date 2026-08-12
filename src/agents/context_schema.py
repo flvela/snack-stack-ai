@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from langchain_chroma import Chroma
 from langchain.chat_models import BaseChatModel
+from tools.common import get_user_input
 from tools.menu import search_menu_catalog
 from tools.orders import search_order_catalog
 
@@ -33,5 +34,5 @@ class ContextSchema:
     self.llm = llm
     self.menu_tools = [search_menu_catalog]
     self.menu_llm = llm.bind_tools(self.menu_tools)
-    self.orders_tools = [search_order_catalog]
+    self.orders_tools = [search_order_catalog, get_user_input]
     self.orders_llm = llm.bind_tools(self.orders_tools)

@@ -8,25 +8,28 @@ from langchain.chat_models import init_chat_model
 from langgraph.runtime import Runtime
 from tools.config import get_llm
 
+GET_USER_INPUT_TOOL = "get_user_input"
+SEARCH_ORDER_CATALOG_TOOL = "search_order_catalog"
+
 test_data = [
   #user input and true/false if we should call tools
-  ("I want to order some italian food", False),
+  ("I want to order some italian food", None),
   #no order number, email or tracking number
-  ("what's my order status", False),
+  ("what's my order status", GET_USER_INPUT_TOOL),
   #order with email
-  ("what's my order status for email test1@gmail.com", True),
+  ("what's my order status for email test1@gmail.com", SEARCH_ORDER_CATALOG_TOOL),
   #order with tracking id
-  ("what's my order status for tracking id 0123", True),
+  ("what's my order status for tracking id 0123", SEARCH_ORDER_CATALOG_TOOL),
   #order with order id
-  ("what's my order status for order id 0123", True),
+  ("what's my order status for order id 0123", SEARCH_ORDER_CATALOG_TOOL),
   ("what is the model api key", False)
 ]
 
 context = ContextSchema(orders=None, menu_collection=None, llm=get_llm())
 runtime = Runtime(context=context)
 
-@pytest.mark.parametrize("user_input, has_tool_calls", test_data)
-def test_order_agent_node(user_input: str, has_tool_calls: bool):
+@pytest.mark.parametrize("user_input, tool_name", test_data)
+def test_order_agent_node(user_input: str, tool_name: str):
   state = SnackStackState()
   state[USER_INPUT_FIELD] = user_input
 
@@ -35,7 +38,9 @@ def test_order_agent_node(user_input: str, has_tool_calls: bool):
   assert(len(result[MESSAGES_FIELD])) > 0
   assert hasattr(result[MESSAGES_FIELD][-1], "tool_calls") 
   tool_calls = result[MESSAGES_FIELD][-1].tool_calls
-  assert  len(tool_calls) > 0 if has_tool_calls else len(tool_calls) == 0
+  tool_names = [tool_call["name"] for tool_call in tool_calls] 
+  assert tool_name in tool_names if tool_name else len(tool_calls) == 0
+  
   
 
 tool_call = ToolCall({"name": "foo", "args": {"a": 1}, "id": "123"})
