@@ -1,5 +1,5 @@
 from agents.menu_agent import menu_agent_node, menu_agent_should_continue
-from agents.state import GRAPH_END, MENU_AGENT_TOOLS, MESSAGES_FIELD, USER_INPUT_FIELD, SnackStackState
+from agents.state import GRAPH_END, MENU_AGENT_TOOLS, MESSAGES_FIELD, REQUIRES_SYNTHESIS_FIELD, SYNTHESIZER_AGENT, USER_INPUT_FIELD, SnackStackState
 from langchain.messages import AIMessage, ToolCall
 import pytest
 
@@ -38,7 +38,9 @@ test_state_data =[
   ({}, GRAPH_END),
   ({MESSAGES_FIELD: [AIMessage(content="", tool_calls=[tool_call])]}, MENU_AGENT_TOOLS),
   ({MESSAGES_FIELD: []}, GRAPH_END),
-  ({MESSAGES_FIELD: [{"content", "any_content"}]}, GRAPH_END)
+  ({MESSAGES_FIELD: [{"content", "any_content"}]}, GRAPH_END),
+  ({MESSAGES_FIELD: [{"content", "any_content"}], REQUIRES_SYNTHESIS_FIELD: True}, SYNTHESIZER_AGENT),
+  ({MESSAGES_FIELD: [{"content", "any_content"}], REQUIRES_SYNTHESIS_FIELD: False}, GRAPH_END)
 ]
 
 @pytest.mark.parametrize("state, expected_output", test_state_data)

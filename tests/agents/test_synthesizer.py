@@ -4,7 +4,7 @@ from langgraph.runtime import Runtime
 
 
 from agents.context_schema import ContextSchema
-from agents.state import FINAL_RESPONSE_FIELD, MENU_AGENT_OUTPUT_FIELD, MESSAGES_FIELD, ORDER_AGENT_OUTPUT_FIELD, USER_INPUT_FIELD, SnackStackState
+from agents.state import FINAL_RESPONSE_FIELD, MENU_AGENT_OUTPUT_FIELD, ORDER_AGENT_OUTPUT_FIELD, USER_INPUT_FIELD, SnackStackState
 from agents.synthesizer import DEFAULT_SYNTHESIZER_MESSAGE, synthesizer_node
 from tools.config import get_llm
 

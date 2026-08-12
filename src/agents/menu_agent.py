@@ -1,7 +1,7 @@
 from langchain.messages import HumanMessage, SystemMessage
 from langgraph.runtime import Runtime
 
-from agents.state import MENU_AGENT_OUTPUT_FIELD, MENU_AGENT_TOOLS, GRAPH_END, MESSAGES_FIELD, USER_INPUT_FIELD, SnackStackState
+from agents.state import MENU_AGENT_OUTPUT_FIELD, MENU_AGENT_TOOLS, GRAPH_END, MESSAGES_FIELD, REQUIRES_SYNTHESIS_FIELD, SYNTHESIZER_AGENT, USER_INPUT_FIELD, SnackStackState
 from agents.context_schema import ContextSchema
 
 menu_instructions = """ 
@@ -37,4 +37,4 @@ def menu_agent_should_continue(state: SnackStackState) -> str:
     last_msg = state[MESSAGES_FIELD][-1]
     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
       return MENU_AGENT_TOOLS
-  return GRAPH_END
+  return SYNTHESIZER_AGENT if state.get(REQUIRES_SYNTHESIS_FIELD) else GRAPH_END

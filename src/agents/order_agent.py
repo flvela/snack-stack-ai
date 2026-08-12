@@ -2,17 +2,21 @@ from langchain.messages import HumanMessage, SystemMessage
 from langgraph.runtime import Runtime
 
 from agents.context_schema import ContextSchema
-from agents.state import MESSAGES_FIELD, ORDER_AGENT_OUTPUT_FIELD, USER_INPUT_FIELD, ORDER_AGENT_TOOLS, GRAPH_END, SnackStackState
+from agents.state import MESSAGES_FIELD, ORDER_AGENT_OUTPUT_FIELD, REQUIRES_SYNTHESIS_FIELD, SYNTHESIZER_AGENT, USER_INPUT_FIELD, ORDER_AGENT_TOOLS, GRAPH_END, SnackStackState
 
 
 order_instructions = """
 You are an order agent. Your job is to answer order questions about orders for our restaurant.
-You can use *search_order_catalog* tool to fetch order data by order_id, email and tracking number.
+You can use the following tools:
+*search_order_catalog* tool to fetch order data by order_id, email and tracking number.
+*get_user_input* tool to fetch the order key data from the user.
+Tool selection rules:
+- If user did not provide order_id, email or tracking number call *get_user_input* tool 
+- If user provides order_id, email or tracking number call *search_order_catalog* tool
 Output rules:
 - Provide order(s) information based on the data retrieved using the *search_order_catalog* only.
 - If order(s) are not found. Say that the order number, email or tracking number has no associated orders.
-- order id and tracking id are unique.
-- email id can return multiple orders. In this case you can display all orders and ask which one they want more details on.
+- order id and tracking id are unique, email id can return multiple orders. 
 """
 
 def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> SnackStackState:
@@ -36,4 +40,4 @@ def order_agent_should_continue(state: SnackStackState) -> str:
     last_msg = state[MESSAGES_FIELD][-1]
     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
       return ORDER_AGENT_TOOLS
-  return GRAPH_END
+  return SYNTHESIZER_AGENT if state.get(REQUIRES_SYNTHESIS_FIELD) else GRAPH_END

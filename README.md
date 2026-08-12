@@ -143,11 +143,13 @@ SNACK-STACK-AI/                   #entire application
       state.py                    #the shared state that is passed between the LangGraph Nodes
     tools/                        #tools used for the agents to import sample data and config
       __init__.py                 #package init file
+      common.py                   #common tools that can be used by any agent
       config.py                   #gets the embeddings and chat model from the config .env file
       menu.py                     #loads the menu sample items and provides the LangGraph menu search tool
       orders.py                   #loads the orders sample items and provides the LangGraph orders search tool
       vector_store.py             #Chroma DB store functionality for local persistence
     __init__.py                   #package init file
+    snack_stack_graph.py          #the snack stack graph definition
   tests/                          #python unit tests using pytest
     agents/                       #agent unit tests 
       test_menu_agent.py          #menu agent tests
@@ -159,6 +161,7 @@ SNACK-STACK-AI/                   #entire application
       test_menu.py                #menu unit tests
       test_orders.py              #orders unit tests
       test_vector_store.py        #vector store unit tests
+    test_snack_stack_graph.py     #snack stack graph tests
   .env.example                    #example config file
   .gitignore                      #git ignore file
   LICENSE                         #license information
