@@ -1,3 +1,4 @@
+"""Builder for the Snack Stack AI LangGraph"""
 from multi_key_dict import multi_key_dict
 
 from langchain_chroma import Chroma
@@ -6,10 +7,15 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import InMemorySaver
 
-
-
 from agents.context_schema import ContextSchema
-from agents.state import GRAPH_END, MENU_AGENT, MENU_AGENT_TOOLS, ORCHESTRATOR_AGENT, ORDER_AGENT, ORDER_AGENT_TOOLS, SYNTHESIZER_AGENT, SnackStackState
+from agents.state import (
+  GRAPH_END,
+  MENU_AGENT_TOOLS,
+  ORCHESTRATOR_AGENT,
+  ORDER_AGENT_TOOLS,
+  SYNTHESIZER_AGENT,
+  SnackStackState
+)
 from agents.orchestrator import dispatch_to_agents, orchestrator_node
 from agents.menu_agent import menu_agent_node, menu_agent_should_continue
 from agents.order_agent import order_agent_node, order_agent_should_continue
@@ -21,9 +27,8 @@ ORDER_AGENT_NODE = "order_agent_node"
 ORDER_AGENT_TOOL_NODE = "order_agent_tool_node"
 SYNTHESIZER_AGENT_NODE = "synthesizer_agent_node"
 
-
-
 def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatModel):
+  """defines and builds the Snack Stack AI LangGraph"""
   context = ContextSchema(orders=orders, menu_collection=menu_collection, llm=llm)
   builder = StateGraph(SnackStackState)
 
@@ -42,11 +47,9 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   #add edges
   #orchestrator edges
   builder.add_edge(START, ORCHESTRATOR_AGENT)
-  builder.add_conditional_edges(ORCHESTRATOR_AGENT, dispatch_to_agents, {
-    MENU_AGENT: MENU_AGENT_NODE,
-    ORDER_AGENT: ORDER_AGENT_NODE
-  })
-  
+  builder.add_conditional_edges(ORCHESTRATOR_AGENT, dispatch_to_agents,
+                                [ORDER_AGENT_NODE, MENU_AGENT_NODE])
+
   #menu agent edges
   builder.add_conditional_edges(MENU_AGENT_NODE, menu_agent_should_continue, {
     MENU_AGENT_TOOLS: MENU_AGENT_TOOL_NODE,
@@ -67,4 +70,3 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   #add memory for persistence checkpointer and troubleshooting
   memory = InMemorySaver()
   return builder.compile(checkpointer=memory), context
-

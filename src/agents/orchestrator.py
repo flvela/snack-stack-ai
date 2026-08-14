@@ -1,13 +1,18 @@
-from typing import List
-
+"""Defines the Orchestrator agent for LangGraph"""
 from langchain.messages import HumanMessage, SystemMessage
 from langgraph.runtime import Runtime
 from langgraph.types import Send
 
 from agents.context_schema import ContextSchema
-from agents.state import MESSAGES_FIELD, REQUIRES_SYNTHESIS_FIELD, TASKS_FIELD, USER_INPUT_FIELD, OrchestratorResult, SnackStackState
+from agents.state import (
+  REQUIRES_SYNTHESIS_FIELD,
+  TASKS_FIELD,
+  USER_INPUT_FIELD,
+  OrchestratorResult,
+  SnackStackState
+)
 
-orchestrator_instructions = """
+ORCHESTRATOR_INSTRUCTIONS = """
 You are an orchestrator agent and your job is to classify each user query
 and dispatch to menu_agent, order_agent or both.
 
@@ -19,18 +24,19 @@ Here are the different ways to dispacth:
 """
 
 def orchestrator_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> SnackStackState:
-  """Orchestrator Agent node that decides how to route traffic to either to Menu Agent, Order Agent or both"""
+  """Orchestrator Agent node that decides how to route traffic
+  to either to Menu Agent, Order Agent or both"""
   messages = [
-    SystemMessage(content=orchestrator_instructions),
+    SystemMessage(content=ORCHESTRATOR_INSTRUCTIONS),
     HumanMessage(content=state[USER_INPUT_FIELD])
   ]
 
   result = runtime.context.llm.with_structured_output(OrchestratorResult).invoke(messages)
-  return {TASKS_FIELD: result.tasks, 
-          MESSAGES_FIELD:[HumanMessage(content=state[USER_INPUT_FIELD])],
-          REQUIRES_SYNTHESIS_FIELD: len(result.tasks) > 1}
+  return {TASKS_FIELD: result.tasks,
+          REQUIRES_SYNTHESIS_FIELD: len(result.tasks) > 1,
+          USER_INPUT_FIELD: state[USER_INPUT_FIELD]}
 
-def dispatch_to_agents(state: SnackStackState) -> List[Send]:
+def dispatch_to_agents(state: SnackStackState):
   """Uses the Send API to dispatch to agent in parrallel if needed"""
   sends = []
   for task in state.get(TASKS_FIELD):
