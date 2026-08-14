@@ -1,11 +1,21 @@
+"""Order Agent definition"""
 from langchain.messages import HumanMessage, SystemMessage
 from langgraph.runtime import Runtime
 
 from agents.context_schema import ContextSchema
-from agents.state import MESSAGES_FIELD, ORDER_AGENT_OUTPUT_FIELD, REQUIRES_SYNTHESIS_FIELD, SYNTHESIZER_AGENT, USER_INPUT_FIELD, ORDER_AGENT_TOOLS, GRAPH_END, SnackStackState
+from agents.state import (
+  MESSAGES_FIELD,
+  ORDER_AGENT_OUTPUT_FIELD,
+  REQUIRES_SYNTHESIS_FIELD,
+  SYNTHESIZER_AGENT,
+  USER_INPUT_FIELD,
+  ORDER_AGENT_TOOLS,
+  GRAPH_END,
+  SnackStackState
+)
 
 
-order_instructions = """
+ORDER_INSTRUCTIONS = """
 You are an order agent. Your job is to answer order questions about orders for our restaurant.
 You can use the following tools:
 *search_order_catalog* tool to fetch order data by order_id, email and tracking number.
@@ -23,7 +33,7 @@ def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) ->
   """ order agent specializing on answering order questions """
   if not state.get(MESSAGES_FIELD):
     messages = [
-      SystemMessage(content=order_instructions),
+      SystemMessage(content=ORDER_INSTRUCTIONS),
       HumanMessage(content=state[USER_INPUT_FIELD])
     ]
   else:
@@ -32,10 +42,10 @@ def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) ->
   result = runtime.context.orders_llm.invoke(messages)
   if result.tool_calls:
     return {MESSAGES_FIELD: [*messages, result] if not state.get(MESSAGES_FIELD) else [result]}
-  else:
-    return {ORDER_AGENT_OUTPUT_FIELD: result.content, MESSAGES_FIELD: [result]}
+  return {ORDER_AGENT_OUTPUT_FIELD: result.content, MESSAGES_FIELD: [result]}
 
 def order_agent_should_continue(state: SnackStackState) -> str:
+  """used to determine if order agent needs another turn. Condition on LangGraph edge"""
   if MESSAGES_FIELD in state and len(state[MESSAGES_FIELD]) > 0:
     last_msg = state[MESSAGES_FIELD][-1]
     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:

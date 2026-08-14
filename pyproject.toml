@@ -22,6 +22,7 @@ dependencies = [
   "langchain-openai",
   "langchain_tavily",
   "multi-key-dict",
+  "notebook",
   "deepagents",
   "ipython",
   "pytest",
