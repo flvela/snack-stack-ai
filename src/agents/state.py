@@ -1,11 +1,12 @@
+"""Defines the SnackStackState, AgentTasks and Orchestrator result"""
 from typing import Annotated, List, Literal, TypedDict
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 from pydantic import BaseModel, Field
 
 #graph nodes
-MENU_AGENT = "menu_agent"
-ORDER_AGENT = "order_agent"
+MENU_AGENT_NODE = "menu_agent_node"
+ORDER_AGENT_NODE = "order_agent_node"
 ORCHESTRATOR_AGENT = "orchestrator_agent"
 SYNTHESIZER_AGENT = "synthesizer_agent"
 
@@ -42,7 +43,7 @@ class SnackStackState(TypedDict):
 
 class AgentTask(BaseModel):
   """ A task for a specialist agent """
-  agent: Literal["menu_agent", "order_agent"] = Field(
+  agent: Literal["menu_agent_node", "order_agent_node"] = Field(
     description="Name of the agent that handles the task"
   )
   description: str = Field(

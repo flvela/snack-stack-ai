@@ -1,39 +1,57 @@
-import os
-import shutil
-import time
+"""VectorStore class definition"""
+from chromadb import PersistentClient
+from chromadb.api.models.Collection import Collection
+
 
 from langchain_chroma import Chroma
-from tools.config import get_embeddings  # Vector database for similarity search
+from tools.config import get_chromadb_embeddings, get_langchain_embeddings
 
+PERSIST_DIRECTORY = 'data/chroma_store'
 
-def create_vector_store(persist_directory: str, documents: list, collection_name: str, overwrite: bool = False) -> Chroma:
+class VectorStore:
+  """Implements a Vector store using chromadb Persistent client and langchain_chroma integration.
+  Exposes chromadb PersistentClient close() function to avoid zombie connections 
+  and read-only exceptions after deleting the collection
+  """
+  client: PersistentClient
+  vector_store: Chroma
+  persist_directory: str
+  collection: Collection
+  collection_name: str
+
+  def __init__(self, persist_directory: str, collection_name: str):
+    self.client = PersistentClient(path=persist_directory)
+    self.persist_directory = persist_directory
+    self.collection_name = collection_name
+
+  def get_create_collection(self, documents: list) -> Chroma:
     """
-    Create a vector store from the provided documents.
+    get or create a vector store collection from the provided documents.
+    if collection exists and has documents (count > 0) then the given documents
+    are not loaded.
 
     Args:
-        persist_directory (str): Directory to persist the vector store.
-        documents (list): List of documents to be added to the vector store.
-        collection_name (str): Name of the collection in the vector store.
+        documents (list): List of documents to be added to the collection
     Returns:
-        vector_store: The created vector store.
+        Chroma: a langchain Chroma collection
     """
-    if os.path.exists(persist_directory):
-        if overwrite:
-            try:
-              shutil.rmtree(persist_directory)
-            except PermissionError as e:
-              # Windows may keep Chroma files locked briefly from a prior run.
-              # Fall back to a unique directory so we can still create a vector store and not fail the run.
-              persist_directory = f"{persist_directory}_{int(time.time())}"
-              print(f"PermissionError encountered. Using a new persist directory: {persist_directory}")
-        else:
-            return Chroma(persist_directory=persist_directory, collection_name=collection_name)
-          
+    self.collection = self.client.get_or_create_collection(
+       self.collection_name,
+       embedding_function=get_chromadb_embeddings())
+    self.vector_store = Chroma(
+        client=self.client,
+        collection_name=self.collection_name,
+        embedding_function=get_langchain_embeddings())
+    if self.collection.count() == 0:
+      #load the documents
+      self.vector_store.add_documents(documents)
+      return self.vector_store
 
-    return Chroma.from_documents(documents=documents, 
-                                 embedding=get_embeddings(), 
-                                 persist_directory=persist_directory,
-                                 collection_name=collection_name,
-                                 collection_metadata={"hnsw:space": "cosine"}) # Use cosine distance for similarity search)
+  def delete_collection(self):
+    """deletes the existing collection"""
+    self.vector_store.delete_collection()
 
-
+  def close(self):
+    """closes the client connection to the collection
+    and releasing the lock on the files"""
+    self.client.close()
