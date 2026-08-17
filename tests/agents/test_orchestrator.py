@@ -1,14 +1,17 @@
 """Unit tests for orchestrator agent"""
 from typing import List
 
+from langchain.messages import HumanMessage
 import pytest
-from langgraph.runtime import Runtime
 
-
-from agents.context_schema import ContextSchema
 from agents.state import (
+  FINAL_RESPONSE_FIELD,
+  MENU_AGENT_MESSAGES_FIELD,
   MENU_AGENT_NODE,
+  MENU_AGENT_OUTPUT_FIELD,
+  ORDER_AGENT_MESSAGES_FIELD,
   ORDER_AGENT_NODE,
+  ORDER_AGENT_OUTPUT_FIELD,
   USER_INPUT_FIELD,
   TASKS_FIELD,
   REQUIRES_SYNTHESIS_FIELD,
@@ -16,10 +19,7 @@ from agents.state import (
   SnackStackState
 )
 from agents.orchestrator import orchestrator_node, dispatch_to_agents
-from tools.config import get_llm
-
-context = ContextSchema(orders=None, menu_collection=None, llm=get_llm())
-runtime = Runtime(context=context)
+from testutils.common import init_test_runtime
 
 BOTH = "both"
 
@@ -35,7 +35,7 @@ def test_orchestrator_node(user_input: str, expected_output: str):
   """tests the orchestrator node"""
   state = SnackStackState()
   state[USER_INPUT_FIELD] = user_input
-  result = orchestrator_node(state, runtime)
+  result = orchestrator_node(state, init_test_runtime())
   print(result)
   tasks = result[TASKS_FIELD]
 
@@ -55,8 +55,10 @@ def test_orchestrator_node(user_input: str, expected_output: str):
 
   assert result[USER_INPUT_FIELD] == user_input
 
-menu_agent_task =  AgentTask(agent=MENU_AGENT_NODE, description="Can you recommend some dishes to me")
-order_agent_task =  AgentTask(agent=ORDER_AGENT_NODE, description="Check status of the user's order")
+menu_agent_task =  AgentTask(agent=MENU_AGENT_NODE,
+                             description="Can you recommend some dishes to me")
+order_agent_task =  AgentTask(agent=ORDER_AGENT_NODE,
+                              description="Check status of the user's order")
 
 test_dispatch_data = [
   [],
@@ -67,16 +69,26 @@ test_dispatch_data = [
 
 @pytest.mark.parametrize("tasks", test_dispatch_data)
 def test_dispatch_to_agents(tasks: List[AgentTask]):
+  """unit test for dispatch to agents"""
   state = SnackStackState()
   state[TASKS_FIELD] = tasks
+  state[ORDER_AGENT_MESSAGES_FIELD] =[HumanMessage(content="hello")]
   sends = dispatch_to_agents(state)
   print(sends)
   assert(len(sends) == len(tasks))
 
+  expected_worker_state = {
+    **state,
+    MENU_AGENT_MESSAGES_FIELD: [],
+    MENU_AGENT_OUTPUT_FIELD: "",
+    ORDER_AGENT_MESSAGES_FIELD: [],
+    ORDER_AGENT_OUTPUT_FIELD: "",
+    FINAL_RESPONSE_FIELD: "",
+  }
   nodes = []
   for send in sends:
     nodes.append(send.node)
-    assert send.arg == state
+    assert send.arg == expected_worker_state
 
   expected_nodes = []
   for task in tasks:

@@ -57,6 +57,8 @@ def search_menu_catalog(query: str, runtime: ToolRuntime):
     query (str): The search query.
     runtime (ToolRuntime): The runtime environment for the tool.
   """
+  print(f"\n### searching menu by {query}###\n")
+  print(f"\nstate: {runtime.state}")
   documents = runtime.context.menu_collection.similarity_search(query, k=3)
   if not documents:
     return []

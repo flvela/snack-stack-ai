@@ -9,9 +9,10 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 from agents.context_schema import ContextSchema
 from agents.state import (
-  GRAPH_END,
+  MENU_AGENT_MESSAGES_FIELD,
   MENU_AGENT_TOOLS,
   ORCHESTRATOR_AGENT,
+  ORDER_AGENT_MESSAGES_FIELD,
   ORDER_AGENT_TOOLS,
   SYNTHESIZER_AGENT,
   SnackStackState
@@ -33,8 +34,8 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   builder = StateGraph(SnackStackState)
 
   #create tool nodes
-  menu_agent_tool_node = ToolNode(tools=context.menu_tools)
-  order_agent_tool_node = ToolNode(tools=context.orders_tools)
+  menu_agent_tool_node = ToolNode(tools=context.menu_tools, messages_key=MENU_AGENT_MESSAGES_FIELD)
+  order_agent_tool_node = ToolNode(tools=context.orders_tools, messages_key=ORDER_AGENT_MESSAGES_FIELD)
 
   #add nodes
   builder.add_node(ORCHESTRATOR_AGENT, orchestrator_node)
@@ -53,16 +54,14 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   #menu agent edges
   builder.add_conditional_edges(MENU_AGENT_NODE, menu_agent_should_continue, {
     MENU_AGENT_TOOLS: MENU_AGENT_TOOL_NODE,
-    SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE,
-    GRAPH_END: END
+    SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE
   })
   builder.add_edge(MENU_AGENT_TOOL_NODE, MENU_AGENT_NODE)
 
   #order agent edges
   builder.add_conditional_edges(ORDER_AGENT_NODE, order_agent_should_continue, {
     ORDER_AGENT_TOOLS: ORDER_AGENT_TOOL_NODE,
-    SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE,
-    GRAPH_END: END
+    SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE
   })
   builder.add_edge(ORDER_AGENT_TOOL_NODE, ORDER_AGENT_NODE)
   builder.add_edge(SYNTHESIZER_AGENT_NODE, END)
