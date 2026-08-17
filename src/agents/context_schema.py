@@ -12,6 +12,7 @@ from tools.common import get_user_input
 from tools.menu import search_menu_catalog
 from tools.orders import search_order_catalog
 
+
 @dataclass
 class ContextSchema:
   """Graph Runtime Context schema"""
