@@ -5,15 +5,16 @@ from langchain_core.documents import Document
 from langchain.tools import ToolRuntime, tool
 
 
-#MENU CONSTANTS
-MENU_DISH="Dish"
-MENU_CUISINE="Cuisine"
-MENU_PRICE="Price"
-MENU_RATING="Rating"
-MENU_DIETARY="Dietary"
-MENU_DESCRIPTION="Description"
-MENU_PERSIST_DIRECTORY="data/chroma_store"
-MENU_COLLECTION_NAME="menu_collection"
+# MENU CONSTANTS
+MENU_DISH = "Dish"
+MENU_CUISINE = "Cuisine"
+MENU_PRICE = "Price"
+MENU_RATING = "Rating"
+MENU_DIETARY = "Dietary"
+MENU_DESCRIPTION = "Description"
+MENU_PERSIST_DIRECTORY = "data/chroma_store"
+MENU_COLLECTION_NAME = "menu_collection"
+
 
 def load_menu_documents(file_path: str):
   """
@@ -47,12 +48,13 @@ def load_menu_documents(file_path: str):
 
     return documents
 
+
 @tool("search_menu_catalog", description="Search for menu items based on a query.")
 def search_menu_catalog(query: str, runtime: ToolRuntime):
   """
   Search for menu items based on a query and return the top 3 most similar items
   from the vector store.
- 
+
   Args:
     query (str): The search query.
     runtime (ToolRuntime): The runtime environment for the tool.
@@ -65,5 +67,5 @@ def search_menu_catalog(query: str, runtime: ToolRuntime):
 
   output = f'Top {len(documents)} matches for {query}:\n\n'
   for document in documents:
-    output += document.page_content +"\n---\n"
+    output += document.page_content + "\n---\n"
   return output

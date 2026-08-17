@@ -30,6 +30,7 @@ Here are the different ways to dispacth:
 4. If user intent is not clear send to menu_agent.
 """
 
+
 def orchestrator_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> SnackStackState:
   """Orchestrator Agent node that decides how to route traffic
   to either to Menu Agent, Order Agent or both"""
@@ -45,11 +46,12 @@ def orchestrator_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -
           REQUIRES_SYNTHESIS_FIELD: len(result.tasks) > 1,
           USER_INPUT_FIELD: state[USER_INPUT_FIELD]}
 
+
 def dispatch_to_agents(state: SnackStackState):
   """Uses the Send API to dispatch to agent in parrallel if needed"""
   sends = []
   print(f"\n###dispatch_to_agents###\n{state_to_string(state)}")
-  #reset worker state for downstream agents
+  # reset worker state for downstream agents
   worker_state = {
     **state,
     MENU_AGENT_MESSAGES_FIELD: [],

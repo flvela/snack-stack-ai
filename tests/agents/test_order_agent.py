@@ -18,17 +18,18 @@ GET_USER_INPUT_TOOL = "get_user_input"
 SEARCH_ORDER_CATALOG_TOOL = "search_order_catalog"
 
 test_data = [
-  #user input and true/false if we should call tools
+  # user input and true/false if we should call tools
   ("I want to order some italian food", None),
-  #no order number, email or tracking number
+  # no order number, email or tracking number
   ("what's my order status", GET_USER_INPUT_TOOL),
-  #order with email
+  # order with email
   ("what's my order status for email test1@gmail.com", SEARCH_ORDER_CATALOG_TOOL),
-  #order with tracking id
+  # order with tracking id
   ("what's my order status for tracking id 0123", SEARCH_ORDER_CATALOG_TOOL),
-  #order with order id
+  # order with order id
   ("what's my order status for order id 0123", SEARCH_ORDER_CATALOG_TOOL)
 ]
+
 
 @pytest.mark.parametrize("user_input, tool_name", test_data)
 def test_order_agent_node(user_input: str, tool_name: str):
@@ -47,10 +48,10 @@ def test_order_agent_node(user_input: str, tool_name: str):
   else:
     assert len(result[ORDER_AGENT_OUTPUT_FIELD]) > 0
 
+
 tool_call = ToolCall({"name": "foo", "args": {"a": 1}, "id": "123"})
 
-
-test_state_data =[
+test_state_data = [
   ({}, SYNTHESIZER_AGENT),
   ({ORDER_AGENT_MESSAGES_FIELD: [AIMessage(content="", tool_calls=[tool_call])]},
    ORDER_AGENT_TOOLS),
@@ -61,6 +62,7 @@ test_state_data =[
   ({ORDER_AGENT_MESSAGES_FIELD: [{"content", "any_content"}], REQUIRES_SYNTHESIS_FIELD: False},
    SYNTHESIZER_AGENT)
 ]
+
 
 @pytest.mark.parametrize("state, expected_output", test_state_data)
 def test_menu_agent_should_continue(state, expected_output):

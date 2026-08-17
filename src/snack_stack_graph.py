@@ -28,16 +28,17 @@ ORDER_AGENT_NODE = "order_agent_node"
 ORDER_AGENT_TOOL_NODE = "order_agent_tool_node"
 SYNTHESIZER_AGENT_NODE = "synthesizer_agent_node"
 
+
 def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatModel):
   """defines and builds the Snack Stack AI LangGraph"""
   context = ContextSchema(orders=orders, menu_collection=menu_collection, llm=llm)
   builder = StateGraph(SnackStackState)
 
-  #create tool nodes
+  # create tool nodes
   menu_agent_tool_node = ToolNode(tools=context.menu_tools, messages_key=MENU_AGENT_MESSAGES_FIELD)
   order_agent_tool_node = ToolNode(tools=context.orders_tools, messages_key=ORDER_AGENT_MESSAGES_FIELD)
 
-  #add nodes
+  # add nodes
   builder.add_node(ORCHESTRATOR_AGENT, orchestrator_node)
   builder.add_node(MENU_AGENT_NODE, menu_agent_node)
   builder.add_node(MENU_AGENT_TOOL_NODE, menu_agent_tool_node)
@@ -45,20 +46,20 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   builder.add_node(ORDER_AGENT_TOOL_NODE, order_agent_tool_node)
   builder.add_node(SYNTHESIZER_AGENT_NODE, synthesizer_node)
 
-  #add edges
-  #orchestrator edges
+  # add edges
+  # orchestrator edges
   builder.add_edge(START, ORCHESTRATOR_AGENT)
   builder.add_conditional_edges(ORCHESTRATOR_AGENT, dispatch_to_agents,
                                 [ORDER_AGENT_NODE, MENU_AGENT_NODE])
 
-  #menu agent edges
+  # menu agent edges
   builder.add_conditional_edges(MENU_AGENT_NODE, menu_agent_should_continue, {
     MENU_AGENT_TOOLS: MENU_AGENT_TOOL_NODE,
     SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE
   })
   builder.add_edge(MENU_AGENT_TOOL_NODE, MENU_AGENT_NODE)
 
-  #order agent edges
+  # order agent edges
   builder.add_conditional_edges(ORDER_AGENT_NODE, order_agent_should_continue, {
     ORDER_AGENT_TOOLS: ORDER_AGENT_TOOL_NODE,
     SYNTHESIZER_AGENT: SYNTHESIZER_AGENT_NODE
@@ -66,6 +67,6 @@ def build_graph(orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatMo
   builder.add_edge(ORDER_AGENT_TOOL_NODE, ORDER_AGENT_NODE)
   builder.add_edge(SYNTHESIZER_AGENT_NODE, END)
 
-  #add memory for persistence checkpointer and troubleshooting
+  # add memory for persistence checkpointer and troubleshooting
   memory = InMemorySaver()
   return builder.compile(checkpointer=memory), context

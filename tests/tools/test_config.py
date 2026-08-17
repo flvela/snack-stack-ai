@@ -25,11 +25,12 @@ def test_get_llm():
   assert llm is not None, "LLM should not be None"
   assert isinstance(llm, BaseChatModel)
 
+
 def test_get_chromadb_embeddings():
   """test get_chromadb_embeddings with default params. Ensures project is configured correctly"""
   provider = os.getenv("EMBEDDINGS_MODEL_PROVIDER")
   provider_to_type = {
-    "huggingface": HuggingFaceEmbeddingFunction, 
+    "huggingface": HuggingFaceEmbeddingFunction,
     "openai": OpenAIEmbeddingFunction}
   embeddings = get_chromadb_embeddings()
   assert embeddings is not None, "Embeddings should not be None"

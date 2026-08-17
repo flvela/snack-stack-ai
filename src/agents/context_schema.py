@@ -12,22 +12,23 @@ from tools.common import get_user_input
 from tools.menu import search_menu_catalog
 from tools.orders import search_order_catalog
 
+
 @dataclass
 class ContextSchema:
   """Graph Runtime Context schema"""
-  #orders documents
+  # orders documents
   orders: multi_key_dict
-  #menu items vector store
+  # menu items vector store
   menu_collection: Chroma
-  #the llm used to process/generate data
+  # the llm used to process/generate data
   llm: BaseChatModel
-  #the menu llm used to process menu data
+  # the menu llm used to process menu data
   menu_llm: BaseChatModel
-  #the menu tools 
+  # the menu tools
   menu_tools: List[BaseTool]
-  #the orders llm used to process order status queries
+  # the orders llm used to process order status queries
   orders_llm: BaseChatModel
-  #the orders tools
+  # the orders tools
   orders_tools: List[BaseTool]
 
   def __init__(self, orders: multi_key_dict, menu_collection: Chroma, llm: BaseChatModel):
