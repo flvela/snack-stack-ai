@@ -27,6 +27,16 @@ FINAL_RESPONSE_FIELD = "final_response"
 TASKS_FIELD = "tasks"
 REQUIRES_SYNTHESIS_FIELD="requires_synthesis"
 
+class AgentTask(BaseModel):
+  """ A task for a specialist agent """
+  agent: Literal["menu_agent_node", "order_agent_node"] = Field(
+    description="Name of the agent that handles the task"
+  )
+  description: str = Field(
+    description="Description of the task the agent should perform"
+  )
+
+
 class SnackStackState(TypedDict):
   """Class defining the Graph State for the SnackStack assisstant.
   It will be updated by each node in the graph"""
@@ -48,15 +58,6 @@ class SnackStackState(TypedDict):
   order_agent_output: str
   #final response to user
   final_response: str
-
-class AgentTask(BaseModel):
-  """ A task for a specialist agent """
-  agent: Literal["menu_agent_node", "order_agent_node"] = Field(
-    description="Name of the agent that handles the task"
-  )
-  description: str = Field(
-    description="Description of the task the agent should perform"
-  )
 
 class OrchestratorResult(BaseModel):
   """The orchestrator agents routing decision"""
