@@ -6,3 +6,8 @@ dist/
 *.egg-info/
 *chroma_store/ 
 .ipynb_checkpoints/
+
+
+.coverage
+.coverage.*
+coverage.xml
