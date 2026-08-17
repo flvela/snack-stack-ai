@@ -17,6 +17,7 @@ from tools.menu import MENU_COLLECTION_NAME, load_menu_documents
 from tools.vector_store import VectorStore
 from tools.orders import load_orders_documents
 
+
 def test_build_graph():
   """build_graph unit test"""
   expected_nodes = [START, state.ORCHESTRATOR_AGENT, MENU_AGENT_NODE,
@@ -24,7 +25,7 @@ def test_build_graph():
                     SYNTHESIZER_AGENT_NODE, END]
   expected_edges = {
     START: {
-      state.ORCHESTRATOR_AGENT: (False,None)
+      state.ORCHESTRATOR_AGENT: (False, None)
     },
     state.ORCHESTRATOR_AGENT: {
       ORDER_AGENT_NODE: (True, None),
@@ -35,7 +36,7 @@ def test_build_graph():
       SYNTHESIZER_AGENT_NODE: (True, state.SYNTHESIZER_AGENT),
       END: (True, state.GRAPH_END)
     },
-    MENU_AGENT_TOOL_NODE : {
+    MENU_AGENT_TOOL_NODE: {
       MENU_AGENT_NODE: (False, None)
     },
     ORDER_AGENT_NODE: {
@@ -71,7 +72,7 @@ def test_build_graph():
   assert context.orders == orders
   assert context.menu_collection == menu_collection
   assert context.llm == llm
-  #cleanup
+  # cleanup
   vector_store.delete_collection()
   vector_store.close()
   shutil.rmtree(persist_directory)

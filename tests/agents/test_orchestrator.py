@@ -30,6 +30,7 @@ test_data = [
   ("How's the weather in California", MENU_AGENT_NODE)
 ]
 
+
 @pytest.mark.parametrize("user_input, expected_output", test_data)
 def test_orchestrator_node(user_input: str, expected_output: str):
   """tests the orchestrator node"""
@@ -55,9 +56,10 @@ def test_orchestrator_node(user_input: str, expected_output: str):
 
   assert result[USER_INPUT_FIELD] == user_input
 
-menu_agent_task =  AgentTask(agent=MENU_AGENT_NODE,
+
+menu_agent_task = AgentTask(agent=MENU_AGENT_NODE,
                              description="Can you recommend some dishes to me")
-order_agent_task =  AgentTask(agent=ORDER_AGENT_NODE,
+order_agent_task = AgentTask(agent=ORDER_AGENT_NODE,
                               description="Check status of the user's order")
 
 test_dispatch_data = [
@@ -67,15 +69,16 @@ test_dispatch_data = [
   [menu_agent_task, order_agent_task]
 ]
 
+
 @pytest.mark.parametrize("tasks", test_dispatch_data)
 def test_dispatch_to_agents(tasks: List[AgentTask]):
   """unit test for dispatch to agents"""
   state = SnackStackState()
   state[TASKS_FIELD] = tasks
-  state[ORDER_AGENT_MESSAGES_FIELD] =[HumanMessage(content="hello")]
+  state[ORDER_AGENT_MESSAGES_FIELD] = [HumanMessage(content="hello")]
   sends = dispatch_to_agents(state)
   print(sends)
-  assert(len(sends) == len(tasks))
+  assert len(sends) == len(tasks)
 
   expected_worker_state = {
     **state,

@@ -2,15 +2,15 @@
 from chromadb import PersistentClient
 from chromadb.api.models.Collection import Collection
 
-
 from langchain_chroma import Chroma
 from tools.config import get_chromadb_embeddings, get_langchain_embeddings
 
 PERSIST_DIRECTORY = 'data/chroma_store'
 
+
 class VectorStore:
   """Implements a Vector store using chromadb Persistent client and langchain_chroma integration.
-  Exposes chromadb PersistentClient close() function to avoid zombie connections 
+  Exposes chromadb PersistentClient close() function to avoid zombie connections
   and read-only exceptions after deleting the collection
   """
   client: PersistentClient
@@ -43,7 +43,7 @@ class VectorStore:
         collection_name=self.collection_name,
         embedding_function=get_langchain_embeddings())
     if self.collection.count() == 0:
-      #load the documents
+      # load the documents
       self.vector_store.add_documents(documents)
 
     return self.vector_store

@@ -20,8 +20,9 @@ test_data = [
   (MENU_AGENT_TEST_RESPONSE, ORDER_AGENT_TEST_RESPONSE, None)
 ]
 
+
 @pytest.mark.parametrize("menu_agent_output, order_agent_output, expected_response", test_data)
-def test_synthesizer_node(menu_agent_output:str, order_agent_output:str, expected_response:str):
+def test_synthesizer_node(menu_agent_output: str, order_agent_output: str, expected_response: str):
   """unit test for synthesizer_node"""
   state = SnackStackState()
   state[MENU_AGENT_OUTPUT_FIELD] = menu_agent_output
