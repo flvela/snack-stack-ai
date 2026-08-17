@@ -45,7 +45,8 @@ class VectorStore:
     if self.collection.count() == 0:
       #load the documents
       self.vector_store.add_documents(documents)
-      return self.vector_store
+
+    return self.vector_store
 
   def delete_collection(self):
     """deletes the existing collection"""

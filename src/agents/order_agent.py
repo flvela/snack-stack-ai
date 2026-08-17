@@ -4,14 +4,14 @@ from langgraph.runtime import Runtime
 
 from agents.context_schema import ContextSchema
 from agents.state import (
-  MESSAGES_FIELD,
+  ORDER_AGENT_MESSAGES_FIELD,
   ORDER_AGENT_OUTPUT_FIELD,
   REQUIRES_SYNTHESIS_FIELD,
   SYNTHESIZER_AGENT,
   USER_INPUT_FIELD,
   ORDER_AGENT_TOOLS,
-  GRAPH_END,
-  SnackStackState
+  SnackStackState,
+  state_to_string
 )
 
 
@@ -31,23 +31,28 @@ Output rules:
 
 def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> SnackStackState:
   """ order agent specializing on answering order questions """
-  if not state.get(MESSAGES_FIELD):
+  print(f"\n###order_agent_node###\n{state_to_string(state)}")
+
+  if not state.get(ORDER_AGENT_MESSAGES_FIELD):
     messages = [
       SystemMessage(content=ORDER_INSTRUCTIONS),
       HumanMessage(content=state[USER_INPUT_FIELD])
     ]
   else:
-    messages = state.get(MESSAGES_FIELD)
+    messages = state.get(ORDER_AGENT_MESSAGES_FIELD)
 
+  print(f"\n### messages {messages}")
   result = runtime.context.orders_llm.invoke(messages)
+  print(f"\n### result {result}")  
   if result.tool_calls:
-    return {MESSAGES_FIELD: [*messages, result] if not state.get(MESSAGES_FIELD) else [result]}
-  return {ORDER_AGENT_OUTPUT_FIELD: result.content, MESSAGES_FIELD: [result]}
+    return {ORDER_AGENT_MESSAGES_FIELD: [*messages, result]}
+  return {ORDER_AGENT_OUTPUT_FIELD: result.content}
 
 def order_agent_should_continue(state: SnackStackState) -> str:
   """used to determine if order agent needs another turn. Condition on LangGraph edge"""
-  if MESSAGES_FIELD in state and len(state[MESSAGES_FIELD]) > 0:
-    last_msg = state[MESSAGES_FIELD][-1]
+  print(f"\n###order_agent_should_continue###\n{state_to_string(state)}")
+  if ORDER_AGENT_MESSAGES_FIELD in state and len(state[ORDER_AGENT_MESSAGES_FIELD]) > 0:
+    last_msg = state[ORDER_AGENT_MESSAGES_FIELD][-1]
     if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
       return ORDER_AGENT_TOOLS
-  return SYNTHESIZER_AGENT if state.get(REQUIRES_SYNTHESIS_FIELD) else GRAPH_END
+  return SYNTHESIZER_AGENT
