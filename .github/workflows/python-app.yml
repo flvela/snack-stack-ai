@@ -9,6 +9,14 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  MODEL_PROVIDER: "anthropic"
+  MODEL_API_KEY: ${{secrets.MODEL_API_KEY}}
+  MODEL: "claude-haiku-4-5-20251001"
+  EMBEDDINGS_MODEL_PROVIDER: "huggingface"
+  EMBEDDINGS_MODEL_API_KEY: ${{secrets.EMBEDDINGS_MODEL_API_KEY}}
+  EMBEDDINGS_MODEL: "google/embeddinggemma-300m"
+
 permissions:
   contents: read
 
