@@ -48,6 +48,7 @@ def load_menu_documents(file_path: str):
 
     return documents
 
+
 @tool("search_menu_catalog", description="Search for menu items based on a query.")
 def search_menu_catalog(query: str, runtime: ToolRuntime):
   """

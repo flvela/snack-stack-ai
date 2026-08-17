@@ -58,9 +58,9 @@ def test_orchestrator_node(user_input: str, expected_output: str):
 
 
 menu_agent_task = AgentTask(agent=MENU_AGENT_NODE,
-                             description="Can you recommend some dishes to me")
+                            description="Can you recommend some dishes to me")
 order_agent_task = AgentTask(agent=ORDER_AGENT_NODE,
-                              description="Check status of the user's order")
+                             description="Check status of the user's order")
 
 test_dispatch_data = [
   [],

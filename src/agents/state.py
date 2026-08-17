@@ -42,21 +42,21 @@ class SnackStackState(TypedDict):
   It will be updated by each node in the graph"""
   # conversation history
   messages: Annotated[List[BaseMessage], add_messages]
-  #user query
+  # user query
   user_input: str
-  #orchestrator decisions
+  # orchestrator decisions
   tasks: List[AgentTask]
-  #Flag for synthesis
+  # Flag for synthesis
   requires_synthesis: bool
-  #menu agent messages
+  # menu agent messages
   menu_agent_messages: Annotated[List[BaseMessage], add_messages]
-  #menu agent output
+  # menu agent output
   menu_agent_output: str
-  #order agent messages
+  # order agent messages
   order_agent_messages: Annotated[List[BaseMessage], add_messages]
-  #order agent output
+  # order agent output
   order_agent_output: str
-  #final response to user
+  # final response to user
   final_response: str
 
 
