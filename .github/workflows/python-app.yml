@@ -46,7 +46,7 @@ jobs:
       run: |
         pytest --cov=. --cov-report xml:pytest/coverage.xml
     - name: Publish code coverage
-      uses: orgoro/coverage@3.3
+      uses: orgoro/coverage@v3
       with:
         coverageFile: pytest/coverage.xml
         token: ${{secrets.GIT_HUB_TOKEN_KEY}}
