@@ -37,6 +37,14 @@ class AgentTask(BaseModel):
   )
 
 
+class AgentState(TypedDict):
+  """common state for each worker agent"""
+  # list of messages for the agent
+  messages: Annotated[List[BaseMessage], add_messages]
+  # output of the agent
+  output: str
+
+
 class SnackStackState(TypedDict):
   """Class defining the Graph State for the SnackStack assisstant.
   It will be updated by each node in the graph"""
