@@ -1,5 +1,6 @@
 """tools to load menu documents and search menu catalogue"""
 import json
+from typing import List
 
 from langchain_core.documents import Document
 from langchain.tools import ToolRuntime, tool
@@ -16,7 +17,7 @@ MENU_PERSIST_DIRECTORY = "data/chroma_store"
 MENU_COLLECTION_NAME = "menu_collection"
 
 
-def load_menu_documents(file_path: str):
+def load_menu_documents(file_path: str) -> List[Document]:
   """
   Load menu documents from a JSON file.
 
