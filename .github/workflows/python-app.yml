@@ -44,11 +44,10 @@ jobs:
         flake8 . --count --max-complexity=10 --max-line-length=127 --statistics --indent-size=2
     - name: Test with pytest and coverage
       run: |
-        pytest --cov=. --cov-report xml:pytest/coverage.xml
+        pytest --cov=. --cov-report xml:coverage/coverage.xml
     - name: Publish code coverage
       uses: orgoro/coverage@v3
       with:
-        coverageFile: pytest/coverage.xml
+        coverageFile: coverage/coverage.xml
         token: ${{secrets.GIT_HUB_TOKEN_KEY}}
-
-
+        thresholdAll: 0.9

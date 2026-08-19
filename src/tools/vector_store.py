@@ -3,7 +3,7 @@ from chromadb import PersistentClient
 from chromadb.api.models.Collection import Collection
 
 from langchain_chroma import Chroma
-from tools.config import get_chromadb_embeddings, get_langchain_embeddings
+from tools.config import Config
 
 PERSIST_DIRECTORY = 'data/chroma_store'
 
@@ -24,24 +24,30 @@ class VectorStore:
     self.persist_directory = persist_directory
     self.collection_name = collection_name
 
-  def get_create_collection(self, documents: list) -> Chroma:
+  def get_create_collection(self, documents: list, config: Config = Config()) -> Chroma:
     """
     get or create a vector store collection from the provided documents.
     if collection exists and has documents (count > 0) then the given documents
     are not loaded.
 
+    embedding functions for chromadb and langchain must use the same embeddings algorithm
+
     Args:
         documents (list): List of documents to be added to the collection
+        provider: embeddings model provider
+        model: embeddings model name
+        api_key: embeddings model provider api key
+
     Returns:
         Chroma: a langchain Chroma collection
     """
     self.collection = self.client.get_or_create_collection(
        self.collection_name,
-       embedding_function=get_chromadb_embeddings())
+       embedding_function=config.get_chromadb_embeddings())
     self.vector_store = Chroma(
         client=self.client,
         collection_name=self.collection_name,
-        embedding_function=get_langchain_embeddings())
+        embedding_function=config.get_langchain_embeddings())
     if self.collection.count() == 0:
       # load the documents
       self.vector_store.add_documents(documents)

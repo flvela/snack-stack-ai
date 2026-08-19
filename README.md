@@ -129,6 +129,8 @@ pytest
 ## Project Structure
 ```
 SNACK-STACK-AI/                   #entire application
+  .github/workflows               #github repo actions or workflows
+    python-app.yml                #python pull request action for building, testing and code coverage
   data/                           #contains sample data used by AI assisstant
     menu.json                     #sample menu items
     orders.json                   #sample orders
@@ -139,8 +141,13 @@ SNACK-STACK-AI/                   #entire application
       menu_agent.py               #menu agent and prompt
       orchestrator.py             #orchestrator agent and prompt
       order_agent.py              #order agent and prompt
-      synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
       state.py                    #the shared state that is passed between the LangGraph Nodes
+      synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
+    jupyter/                      #contains jupyter notebooks
+      graph_test.ipynb            #jupyter notebook (playground) for testing the snack-stack-ai app
+    testutils/                    #folder for unit testing utils and tools
+      __init__.py                 #package init file
+      common.py                   #common unit testing functions
     tools/                        #tools used for the agents to import sample data and config
       __init__.py                 #package init file
       common.py                   #common tools that can be used by any agent

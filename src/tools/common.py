@@ -14,9 +14,3 @@ def get_user_input(message: str):
   print(f"\n###get user input {message}###\n")
   response = interrupt(message)
   return response.strip()
-
-
-@tool("test_tool", description="tool used for testing purposes.")
-def test_tool(query: str):
-  """unit testing tool"""
-  return query

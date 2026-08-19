@@ -12,7 +12,7 @@ from snack_stack_graph import (
   SYNTHESIZER_AGENT_NODE,
   build_graph
   )
-from tools.config import get_llm
+from tools.config import Config
 from tools.menu import MENU_COLLECTION_NAME, load_menu_documents
 from tools.vector_store import VectorStore
 from tools.orders import load_orders_documents
@@ -57,7 +57,8 @@ def test_build_graph():
   vector_store = VectorStore(persist_directory=persist_directory,
                              collection_name=MENU_COLLECTION_NAME)
   menu_collection = vector_store.get_create_collection(documents)
-  llm = get_llm()
+  config = Config()
+  llm = config.get_llm()
   graph, context = build_graph(orders=orders, menu_collection=menu_collection, llm=llm)
   assert list(graph.get_graph().nodes.keys()) == expected_nodes
   print(graph.get_graph().edges)
