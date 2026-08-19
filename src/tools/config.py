@@ -11,6 +11,7 @@ from chromadb.utils.embedding_functions import HuggingFaceEmbeddingFunction, Ope
 
 load_dotenv()  # Load environment variables from .env file
 
+
 @dataclass
 class Config:
   """represent config for the application"""
@@ -28,7 +29,7 @@ class Config:
 
   def __post_init__(self):
     """Gets the kwargs for init_embeddings based on provider and api key"""
-    self.embeddings_kw_args={
+    self.embeddings_kw_args = {
       "huggingface": {"model_kwargs": {"token": self.embeddings_model_api_key}},
       "openai": {"openai_api_key": self.embeddings_model_api_key}
     }
@@ -49,8 +50,6 @@ class Config:
         f" supported providers: {self.embeddings_by_provider.keys()}"))
 
 
-
-
   def get_chromadb_embeddings(self) -> Embeddings:
     """
     Get the chromadb embeddings model from arguments or environment variables.
@@ -65,7 +64,7 @@ class Config:
 
     raise NotImplementedError(
       (f"Embedddings model provider {self.embeddings_model_provider} is not one of the"
-      f" supported providers: {self.embeddings_by_provider.keys()}"))
+       f" supported providers: {self.embeddings_by_provider.keys()}"))
 
 
   def get_llm(self) -> BaseChatModel:
@@ -77,6 +76,6 @@ class Config:
       api_key: the model provider api key.
     """
     return init_chat_model(model=self.model_name,
-                          model_provider=self.model_provider,
-                          temperature=0,
-                          api_key=self.model_api_key)
+                           model_provider=self.model_provider,
+                           temperature=0,
+                           api_key=self.model_api_key)
