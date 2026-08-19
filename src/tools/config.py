@@ -49,7 +49,6 @@ class Config:
       (f"Embedddings model provider {self.embeddings_model_provider} is not one of the"
         f" supported providers: {self.embeddings_by_provider.keys()}"))
 
-
   def get_chromadb_embeddings(self) -> Embeddings:
     """
     Get the chromadb embeddings model from arguments or environment variables.
@@ -65,7 +64,6 @@ class Config:
     raise NotImplementedError(
       (f"Embedddings model provider {self.embeddings_model_provider} is not one of the"
        f" supported providers: {self.embeddings_by_provider.keys()}"))
-
 
   def get_llm(self) -> BaseChatModel:
     """
