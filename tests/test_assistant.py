@@ -30,7 +30,7 @@ def test_ask(query: str, expected_answer_strings: list[str]):
   print(answer)
   assert answer is not None
   if assistant.is_interrupted:
-    assistant.ask("ORD-201")
+    answer = assistant.ask("ORD-201")
 
   for expected_string in expected_answer_strings:
     assert expected_string in answer

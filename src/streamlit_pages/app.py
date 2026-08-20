@@ -11,8 +11,7 @@ from streamlit_pages.constants import (
   EMBEDDINGS_MODEL_PROVIDER_CONFIG,
   EMBEDDINGS_MODEL_API_KEY_CONFIG,
   EMBEDDINGS_MODEL_CONFIG,
-  SNACK_STACK_ASSISTANT_CONFIG,
-  SNACK_STACK_ASSISTANT_INTERRUPTED
+  SNACK_STACK_ASSISTANT_CONFIG
 )
 from tools.config import Config
 from tools.menu import load_menu_documents

@@ -1,5 +1,4 @@
 """Defines the Snack stack AI assistant"""
-from collections.abc import Callable
 import shutil
 from typing import List
 import uuid
