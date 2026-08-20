@@ -126,6 +126,11 @@ pytest tests/tools/test_config.py
 pytest
 ```
 
+### 7. Run Streamlit application
+```
+streamlit run src/streamlit_pages/app.py
+```
+
 ## Project Structure
 ```
 SNACK-STACK-AI/                   #entire application
@@ -145,6 +150,9 @@ SNACK-STACK-AI/                   #entire application
       synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
     jupyter/                      #contains jupyter notebooks
       graph_test.ipynb            #jupyter notebook (playground) for testing the snack-stack-ai app
+    streamlit_pages/              #streamlit application
+      app.py                      #streamlit main page and app
+      constants.py                #streamlit constants used by app.py
     testutils/                    #folder for unit testing utils and tools
       __init__.py                 #package init file
       common.py                   #common unit testing functions
@@ -156,6 +164,7 @@ SNACK-STACK-AI/                   #entire application
       orders.py                   #loads the orders sample items and provides the LangGraph orders search tool
       vector_store.py             #Chroma DB store functionality for local persistence
     __init__.py                   #package init file
+    assistant.py                  #defines the SnackStackAssistant
     snack_stack_graph.py          #the snack stack graph definition
   tests/                          #python unit tests using pytest
     agents/                       #agent unit tests 
