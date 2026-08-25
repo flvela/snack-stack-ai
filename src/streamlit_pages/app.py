@@ -39,6 +39,7 @@ def initialize_assisstant():
                       embeddings_model_api_key=st.session_state[EMBEDDINGS_MODEL_API_KEY_CONFIG])
   st.session_state[SNACK_STACK_ASSISTANT_CONFIG] = SnackStackAssistant(orders=orders, menu=menu, config=app_config)
 
+
 def configure_application():
   """reset the application"""
   if is_config_complete():

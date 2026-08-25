@@ -53,7 +53,7 @@ class SnackStackAssistant:
     self.is_interrupted = False
 
   def get_interrupt_value(self) -> bool:
-    """if the graph was interrupted due to a HITL interrupt it 
+    """if the graph was interrupted due to a HITL interrupt it
     returns the prompt value to user
     """
     config = {"configurable": {"thread_id": self.thread_id}}
@@ -91,7 +91,7 @@ class SnackStackAssistant:
 
     return result.get(FINAL_RESPONSE_FIELD, DEFAULT_ANSWER)
 
-  async def async_ask(self, query:str):
+  async def async_ask(self, query: str):
     """invokes snack stack graph using astream events with user query and handles human-in-the-loop (HITL) interrupts.
     To start a new conversation use reset() method
 
@@ -123,7 +123,6 @@ class SnackStackAssistant:
     config = {"configurable": {"thread_id": self.thread_id}}
     snapshot = self.graph.get_state(config)
     return snapshot.values.get(FINAL_RESPONSE_FIELD, DEFAULT_ANSWER)
-
 
   def shutdown(self):
     """Closes connection to vector store and cleans up data"""

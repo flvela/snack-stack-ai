@@ -48,7 +48,7 @@ LANGRAPH_NODE_NAME = "LangGraph"
 # status texts
 STATUS_NOT_STARTED = ":grey-badge[:material/hourglass_top: Not Started]"
 STATUS_RUNNING = ":yellow-badge[:material/cached: Running]"
-STATUS_PAUSED =  ":orange-badge[:material/pause: Paused]"
+STATUS_PAUSED = ":orange-badge[:material/pause: Paused]"
 STATUS_COMPLETED = ":green-badge[:material/check_small: Completed]"
 
 
@@ -121,7 +121,7 @@ async def graph_stream_events(prompt: str, events_container):
           node_statuses_by_name[node_tool_name].status_text = STATUS_PAUSED
 
 
-def reset_graph_node(node_name:str):
+def reset_graph_node(node_name: str):
   """reset the node status and times"""
   if node_name in st.session_state[GRAPH_NODE_STATUS_CONFIG]:
     node = st.session_state[GRAPH_NODE_STATUS_CONFIG][node_name]
@@ -130,6 +130,7 @@ def reset_graph_node(node_name:str):
     node.start_time = 0
     node.status_placeholder.markdown(STATUS_NOT_STARTED, text_alignment="right")
     node.time_placeholder.markdown("--", text_alignment="right")
+
 
 def reset_node_statuses():
   """reset the graph node order status and time placeholders"""
@@ -142,7 +143,7 @@ def reset_node_statuses():
 
 
 def async_chat_with_user(message_container, events_container):
-  """asynchronous chat with user. 
+  """asynchronous chat with user.
   Args:
     messsage_container: the message container for chat history
     node_statuses_by_name (dict): graph node container to write messages to as graph streams events
@@ -175,10 +176,10 @@ def async_chat_with_user(message_container, events_container):
       result = assistant.get_last_message()
       write_and_save_message(result, ASSISTANT_ROLE, message_container)
 
+
 def initialize_graph_node(node_name: str, parent_container: DeltaGenerator):
   """initializes the graph status and placeholder status container in the parent_container"""
   node_container = parent_container.container(key=node_name, border=True, gap="xxsmall")
-  #node_container.write(node_name.replace("_", " ").title())
   node_col, status_col = node_container.columns(2)
   node_col.write(node_name.replace("_", " ").title())
   status_placeholder = status_col.empty()
@@ -216,6 +217,7 @@ def build_graph_containers(graph_container):
   initialize_graph_node(SYNTHESIZER_AGENT_NODE, graph_container)
   initialize_graph_node(ORDER_AGENT_TOOL_NODE, col2)
 
+
 def async_ai_assistant_page():
   """defines the streamlit AI Assistant chat page"""
   st.set_page_config(layout="wide")
@@ -223,7 +225,7 @@ def async_ai_assistant_page():
   st.header("Snack Stack AI Assistant", text_alignment="left")
   st.divider()
   if GRAPH_NODE_STATUS_CONFIG not in st.session_state:
-    st.session_state[GRAPH_NODE_STATUS_CONFIG] =  {}
+    st.session_state[GRAPH_NODE_STATUS_CONFIG] = {}
 
   if is_config_complete() and SNACK_STACK_ASSISTANT_CONFIG in st.session_state:
     col1, col2 = st.columns(2)

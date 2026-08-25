@@ -52,11 +52,11 @@ def load_menu_documents_from_json(json_documents: list[dict]):
       Description: {item[MENU_DESCRIPTION]}""".strip()
 
     doc = Document(page_content=content,
-                    metadata={
-                      MENU_DISH: item[MENU_DISH],
-                      MENU_CUISINE: item[MENU_CUISINE],
-                      MENU_DIETARY: item[MENU_DIETARY],
-                      })
+                   metadata={
+                     MENU_DISH: item[MENU_DISH],
+                     MENU_CUISINE: item[MENU_CUISINE],
+                     MENU_DIETARY: item[MENU_DIETARY]
+                     })
     documents.append(doc)
 
   return documents

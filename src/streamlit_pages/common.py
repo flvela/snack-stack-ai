@@ -9,11 +9,11 @@ EMBEDDINGS_MODEL_PROVIDER_CONFIG = "embeddings_model_provider"
 EMBEDDINGS_MODEL_API_KEY_CONFIG = "embeddings_model_api_key"
 EMBEDDINGS_MODEL_CONFIG = "embeddings_model"
 SNACK_STACK_ASSISTANT_CONFIG = "snack_stack_assistant"
-MENU_FILE_CONFIG="menu_file_config"
-ORDERS_FILE_CONFIG="orders_file_config"
+MENU_FILE_CONFIG = "menu_file_config"
+ORDERS_FILE_CONFIG = "orders_file_config"
 GRAPH_NODE_STATUS_CONFIG = "graph_node_status_config"
-REQUIRED_CONFIG=[
-  MODEL_CONFIG, 
+REQUIRED_CONFIG = [
+  MODEL_CONFIG,
   MODEL_PROVIDER_CONFIG,
   MODEL_API_KEY_CONFIG,
   EMBEDDINGS_MODEL_PROVIDER_CONFIG,
@@ -24,11 +24,9 @@ REQUIRED_CONFIG=[
 ]
 CONFIG_FAILED = "config_failed"
 
-
-
 # widget help messages
-MENU_FILE_HELP_MESSAGE="""json file expected. Here is an example entry:
-  [ 
+MENU_FILE_HELP_MESSAGE = """json file expected. Here is an example entry:
+  [
     {
       "Dish": "Vegan Pasta Primavera",
       "Cuisine": "Italian",
@@ -37,9 +35,10 @@ MENU_FILE_HELP_MESSAGE="""json file expected. Here is an example entry:
       "Dietary": "Vegan",
       "Description": "Penne with seasonal vegetables, olive oil, garlic"
     }
+  ]
 """
-ORDERS_FILE_HELP_MESSAGE="""json file expected. Here is an example entry:
-  [ 
+ORDERS_FILE_HELP_MESSAGE = """json file expected. Here is an example entry:
+  [
     {
       "Order_ID": "ORD-205",
       "Item": "Paneer Tikka",
@@ -48,7 +47,7 @@ ORDERS_FILE_HELP_MESSAGE="""json file expected. Here is an example entry:
       "Tracking": "SS205TRK",
       "Email": "kavya@example.com"
     }
-  }
+  ]
 """
 
 
