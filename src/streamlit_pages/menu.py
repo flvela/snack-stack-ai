@@ -26,8 +26,8 @@ if uploaded_file is not None:
         container = st.container(border=True, gap="xxsmall")
         container.subheader(key)
         for menu_entry in value:
-          container.write(f"##### {menu_entry["Dish"]} ${menu_entry["Price"]}")
-          container.write(f"({menu_entry["Dietary"]})")
-          container.write(f"{menu_entry["Description"]}")
+          container.write(f"##### {menu_entry['Dish']} ${menu_entry['Price']}")
+          container.write(f"({menu_entry['Dietary']})")
+          container.write(f"{menu_entry['Description']}")
 else:
   st.warning(f"Menu file missing, configure application in sidebar\n. {config_missing_message()}")
