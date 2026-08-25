@@ -46,6 +46,12 @@ def order_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) ->
   print(f"\n### result {result}")
   if result.tool_calls:
     return {ORDER_AGENT_MESSAGES_FIELD: [*messages, result]}
+
+  if isinstance(result.content, list):
+    content = result.content[0]
+    if isinstance(content, dict) and 'text' in  content:
+      return {ORDER_AGENT_OUTPUT_FIELD: content['text']}
+
   return {ORDER_AGENT_OUTPUT_FIELD: result.content}
 
 

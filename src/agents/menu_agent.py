@@ -42,6 +42,11 @@ def menu_agent_node(state: SnackStackState, runtime: Runtime[ContextSchema]) -> 
     return {MENU_AGENT_MESSAGES_FIELD:
             [*messages, result] if not state.get(MENU_AGENT_MESSAGES_FIELD) else [result]}
 
+  if isinstance(result.content, list):
+    content = result.content[0]
+    if isinstance(content, dict) and 'text' in  content:
+      return {MENU_AGENT_OUTPUT_FIELD: content['text']}
+
   return {MENU_AGENT_OUTPUT_FIELD: result.content}
 
 

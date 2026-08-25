@@ -26,6 +26,7 @@ dependencies = [
   "deepagents",
   "ipython",
   "pytest",
+  "pytest-asyncio",
   "python-dotenv",
   "sentence-transformers",
   "streamlit",
@@ -41,3 +42,6 @@ omit = [
   "src/jupyter/*",
   "src/streamlit_pages/*"
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"  # Require explicit @pytest.mark.asyncio
