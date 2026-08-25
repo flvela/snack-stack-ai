@@ -52,6 +52,17 @@ class SnackStackAssistant:
     self.thread_id = str(uuid.uuid4())
     self.is_interrupted = False
 
+  def get_interrupt_value(self) -> bool:
+    """if the graph was interrupted due to a HITL interrupt it
+    returns the prompt value to user
+    """
+    config = {"configurable": {"thread_id": self.thread_id}}
+    snapshot = self.graph.get_state(config)
+
+    for interrupt in snapshot.interrupts:
+      return interrupt.value
+    return None
+
   def ask(self, query: str):
     """invokes snack stack graph with user query and handles human-in-the-loop (HITL) interrupts.
     To start a new conversation use reset() method
@@ -72,17 +83,46 @@ class SnackStackAssistant:
     config = {"configurable": {"thread_id": self.thread_id}}
     result = self.graph.invoke(graph_input, config, context=self.context)
     print(f"result: {result}")
-    snapshot = self.graph.get_state(config)
-    print(f"snapshot: {snapshot}")
-    for task in snapshot.tasks:
-      if not getattr(task, "interrupts", None):
-        continue
-      for intr in task.interrupts:
-        prompt = intr.value
-        self.is_interrupted = True
-        return prompt
+
+    interrupt_value = self.get_interrupt_value()
+    if interrupt_value is not None:
+      self.is_interrupted = True
+      return interrupt_value
 
     return result.get(FINAL_RESPONSE_FIELD, DEFAULT_ANSWER)
+
+  async def async_ask(self, query: str):
+    """invokes snack stack graph using astream events with user query and handles human-in-the-loop (HITL) interrupts.
+    To start a new conversation use reset() method
+
+    Args:
+      query: the original user query to send to the graph
+    """
+    interrupted_value = self.get_interrupt_value()
+    print(f"### Async Ask {query} interrupt {interrupted_value}")
+    if interrupted_value is not None:
+      graph_input = Command(resume=query)
+      self.is_interrupted = False
+      print(f"### Resuming graph with query {query}")
+    else:
+      graph_input = {
+          "user_input": query,
+          "messages": [],
+          "output": "",
+          "route": ""}
+
+    config = {"configurable": {"thread_id": self.thread_id}}
+    return self.graph.astream_events(graph_input, config, context=self.context, version="v2")
+
+  def get_last_message(self):
+    """Get the last message from the graph to user"""
+    interrupted_value = self.get_interrupt_value()
+    if interrupted_value is not None:
+      return interrupted_value
+
+    config = {"configurable": {"thread_id": self.thread_id}}
+    snapshot = self.graph.get_state(config)
+    return snapshot.values.get(FINAL_RESPONSE_FIELD, DEFAULT_ANSWER)
 
   def shutdown(self):
     """Closes connection to vector store and cleans up data"""

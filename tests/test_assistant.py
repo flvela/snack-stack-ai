@@ -14,7 +14,7 @@ test_data = [
    ["ORD-201", "Out for Delivery"]),
   # use menu and order agent test
   ("Tell me about your Margherita Pizza and the status of my order with tracking number SS201TRK",
-   ["ORD-201", "Out for Delivery", "Margherita Pizza", "Classic thin crust"]),
+   ["ORD-201", "Out for Delivery", "Margherita Pizza"]),
   # interrupt assistant use case as no order key present
   ("what's the status of my order",
    ["ORD-201", "Out for Delivery"])
@@ -33,7 +33,7 @@ def test_ask(query: str, expected_answer_strings: list[str]):
     answer = assistant.ask("ORD-201")
 
   for expected_string in expected_answer_strings:
-    assert expected_string in answer
+    assert expected_string.lower() in answer.lower()
   assistant.shutdown()
 
 

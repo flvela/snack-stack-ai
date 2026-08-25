@@ -29,25 +29,37 @@ def load_menu_documents(file_path: str) -> List[Document]:
   with open(file_path, 'r', encoding='utf-8') as file:
     items = json.load(file)
 
-    documents = []
-    for item in items:
-      content = f"""
-        Dish: {item[MENU_DISH]}
-        Cuisine: {item[MENU_CUISINE]}
-        Price: {item[MENU_PRICE]}
-        Rating: {item[MENU_RATING]}
-        Dietary: {item[MENU_DIETARY]}
-        Description: {item[MENU_DESCRIPTION]}""".strip()
+    return load_menu_documents_from_json(items)
 
-      doc = Document(page_content=content,
-                     metadata={
-                       MENU_DISH: item[MENU_DISH],
-                       MENU_CUISINE: item[MENU_CUISINE],
-                       MENU_DIETARY: item[MENU_DIETARY],
-                       })
-      documents.append(doc)
 
-    return documents
+def load_menu_documents_from_json(json_documents: list[dict]):
+  """
+    Load menu documents from a JSON list.
+
+  Args:
+    json_documents (list[dict]): The document list containing menu documents.
+  Returns:
+    list: A list of LangChain menu documents
+  """
+  documents = []
+  for item in json_documents:
+    content = f"""
+      Dish: {item[MENU_DISH]}
+      Cuisine: {item[MENU_CUISINE]}
+      Price: {item[MENU_PRICE]}
+      Rating: {item[MENU_RATING]}
+      Dietary: {item[MENU_DIETARY]}
+      Description: {item[MENU_DESCRIPTION]}""".strip()
+
+    doc = Document(page_content=content,
+                   metadata={
+                     MENU_DISH: item[MENU_DISH],
+                     MENU_CUISINE: item[MENU_CUISINE],
+                     MENU_DIETARY: item[MENU_DIETARY]
+                     })
+    documents.append(doc)
+
+  return documents
 
 
 @tool("search_menu_catalog", description="Search for menu items based on a query.")

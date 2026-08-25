@@ -6,7 +6,7 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-Agents-2C3E50)
 ![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Database-orange)
 
-> A voice enabled multi-agent food delivery assistent. It accepts queries through text or voice from a user. It specialiazes in menu searches and order status tracking
+> A voice enabled multi-agent food delivery assistent. It accepts queries through text or voice from a user. It specializes in menu searches and order status tracking
 
 ## Table of Contents
 1. [Overview](#overview)

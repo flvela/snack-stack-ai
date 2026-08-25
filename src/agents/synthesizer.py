@@ -17,12 +17,12 @@ from agents.context_schema import ContextSchema
 
 
 SYNTHESIZER_INSTRUCTIONS = """
-You are a synthesizer agent whose job is to format multiple  agent inputs into a single comprehensive response.
+You are a synthesizer agent whose job is to format multiple agent inputs into a single response.
 Output rules:
-1. Organize information
-2. Note any conflicts
-3. Do not repeat information
-4. End with any actionable next steps.
+1. Remove any conflicts or duplicate information.
+2. Keep output concise.
+3. End with any actionable next steps.
+4. Do not use headings in markdown response
 
 Original user query:
 {query}
