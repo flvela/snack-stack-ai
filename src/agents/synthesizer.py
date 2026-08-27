@@ -75,6 +75,6 @@ def synthesizer_node(state: SnackStackState, runtime: Runtime[ContextSchema]):
   return {FINAL_RESPONSE_FIELD: result.content,
           MESSAGES_FIELD: [result],
           MENU_AGENT_MESSAGES_FIELD: [],
-          MENU_AGENT_OUTPUT_FIELD: "",
+          MENU_AGENT_OUTPUT_FIELD: state.get(MENU_AGENT_OUTPUT_FIELD, ""),
           ORDER_AGENT_MESSAGES_FIELD: [],
-          ORDER_AGENT_OUTPUT_FIELD: ""}
+          ORDER_AGENT_OUTPUT_FIELD: state.get(ORDER_AGENT_OUTPUT_FIELD, "")}

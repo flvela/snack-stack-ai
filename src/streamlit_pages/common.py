@@ -11,7 +11,7 @@ EMBEDDINGS_MODEL_CONFIG = "embeddings_model"
 SNACK_STACK_ASSISTANT_CONFIG = "snack_stack_assistant"
 MENU_FILE_CONFIG = "menu_file_config"
 ORDERS_FILE_CONFIG = "orders_file_config"
-GRAPH_NODE_STATUS_CONFIG = "graph_node_status_config"
+GRAPH_ACTIVITY_CONFIG = "graph_activity_config"
 REQUIRED_CONFIG = [
   MODEL_CONFIG,
   MODEL_PROVIDER_CONFIG,
@@ -72,3 +72,13 @@ def config_missing_message() -> str:
     if not setting_exists(setting):
       missing_settings.append(setting)
   return f"Missing settings are {missing_settings}"
+
+
+def format_time(time_ms: float) -> str:
+  """returns a string of the time + units.
+    Ex 1: time_ms = 1000 -> 1 s
+    Ex 2: time_ms = 10 -> 10 ms
+  """
+  if time_ms == 0:
+    return "--"
+  return f"{time_ms/1000:.2f} s" if time_ms > 900 else f"{time_ms:.2f} ms"
