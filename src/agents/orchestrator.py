@@ -65,6 +65,5 @@ def dispatch_to_agents(state: SnackStackState):
       ORDER_AGENT_OUTPUT_FIELD: "",
       FINAL_RESPONSE_FIELD: "",
     }
-    worker_state[USER_INPUT_FIELD] = task.description
     sends.append(Send(task.agent, worker_state))
   return sends
