@@ -35,6 +35,9 @@ class AgentTask(BaseModel):
   description: str = Field(
     description="Description of the task the agent should perform"
   )
+  user_input: str = Field(
+    description="The part of the user input relevant for the agent and task"
+  )
 
 
 class AgentState(TypedDict):

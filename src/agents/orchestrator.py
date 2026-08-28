@@ -51,15 +51,20 @@ def dispatch_to_agents(state: SnackStackState):
   """Uses the Send API to dispatch to agent in parrallel if needed"""
   sends = []
   print(f"\n###dispatch_to_agents###\n{state_to_string(state)}")
-  # reset worker state for downstream agents
-  worker_state = {
-    **state,
-    MENU_AGENT_MESSAGES_FIELD: [],
-    MENU_AGENT_OUTPUT_FIELD: "",
-    ORDER_AGENT_MESSAGES_FIELD: [],
-    ORDER_AGENT_OUTPUT_FIELD: "",
-    FINAL_RESPONSE_FIELD: "",
-  }
+
   for task in state.get(TASKS_FIELD):
+    # reset worker state for downstream agents
+    worker_state = {
+      MESSAGES_FIELD: state.get(MESSAGES_FIELD),
+      USER_INPUT_FIELD: task.user_input,
+      TASKS_FIELD: state.get(TASKS_FIELD),
+      REQUIRES_SYNTHESIS_FIELD: state.get(REQUIRES_SYNTHESIS_FIELD),
+      MENU_AGENT_MESSAGES_FIELD: [],
+      MENU_AGENT_OUTPUT_FIELD: "",
+      ORDER_AGENT_MESSAGES_FIELD: [],
+      ORDER_AGENT_OUTPUT_FIELD: "",
+      FINAL_RESPONSE_FIELD: "",
+    }
+    worker_state[USER_INPUT_FIELD] = task.description
     sends.append(Send(task.agent, worker_state))
   return sends
