@@ -97,7 +97,6 @@ def test_dispatch_to_agents(tasks: List[AgentTask]):
     assert send.arg[ORDER_AGENT_OUTPUT_FIELD] == ""
     assert send.arg[FINAL_RESPONSE_FIELD] == ""
 
-
   expected_nodes = []
   for task in tasks:
     assert user_input_by_node[task.agent] == task.user_input
