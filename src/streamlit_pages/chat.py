@@ -4,48 +4,23 @@ import asyncio
 import streamlit as st
 from streamlit_pages.common import (
   GRAPH_ACTIVITY_CONFIG,
-  SNACK_STACK_ASSISTANT_CONFIG,
   config_missing_message,
   is_config_complete
 )
-from streamlit_pages.graph_activity import GraphActivity
+from streamlit_pages.snack_stack_container import SnackStackActivityContainer
 
 # chat roles
 ASSISTANT_ROLE = "assistant"
 USER_ROLE = "user"
 
-# graph stream event keys
-DATA_KEY = 'data'
-ERROR_KEY = 'error'
-EVENT_KEY = 'event'
-INPUT_KEY = 'input'
-LANGGRAPH_NODE_KEY = 'langgraph_node'
-METADATA_KEY = 'metadata'
-NAME_KEY = 'name'
-OUTPUT_KEY = 'output'
-
-# graph stream event types
-EVENT_ON_CHAIN_START = 'on_chain_start'
-EVENT_ON_CHAIN_END = "on_chain_end"
-EVENT_ON_TOOL_START = "on_tool_start"
-EVENT_ON_TOOL_END = "on_tool_end"
-EVENT_ON_TOOL_ERROR = "on_tool_error"
-
-# full graph node
-LANGRAPH_NODE_NAME = "LangGraph"
-
-# status texts
-STATUS_NOT_STARTED = ":grey-badge[:material/hourglass_top: Not Started]"
-STATUS_RUNNING = ":yellow-badge[:material/cached: Running]"
-STATUS_PAUSED = ":orange-badge[:material/pause: Paused]"
-STATUS_COMPLETED = ":green-badge[:material/check_small: Completed]"
+SNACK_STACK_ASSISTANT_CONFIG = "snack_stack_assistant"
 
 
 def write_and_save_message(message: str, role: str, message_container):
   """stream the response from AI and adds the message to session state"""
   with message_container:
     with st.chat_message(role):
-      st.write(message)
+      st.markdown(message)
     st.session_state.messages.append({"role": role, "content": message})
 
 
@@ -105,25 +80,24 @@ def async_ai_assistant_page():
   st.divider()
 
   if is_config_complete() and SNACK_STACK_ASSISTANT_CONFIG in st.session_state:
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([2, 1])
     col1.subheader("Conversation")
     col2.subheader("Graph Activity")
     col2.badge(label="Graph activity populated after first query", color="blue", icon=":material/info:")
 
     graph_tab, state_tab, events_tab = col2.tabs(["Graph", "State", "Events"])
-    events_container = events_tab.container(key="events_container", border=True, gap="xxsmall")
 
     if GRAPH_ACTIVITY_CONFIG not in st.session_state:
-      st.session_state[GRAPH_ACTIVITY_CONFIG] = GraphActivity()
+      st.session_state[GRAPH_ACTIVITY_CONFIG] = SnackStackActivityContainer()
 
     st.session_state[GRAPH_ACTIVITY_CONFIG].initialize_state_container(state_tab)
-    st.session_state[GRAPH_ACTIVITY_CONFIG].initialize_events_container(events_container)
+    st.session_state[GRAPH_ACTIVITY_CONFIG].initialize_events_container(events_tab)
 
     with col2:
       graph_container = graph_tab.container(key="graph_container", border=False, gap="xxsmall", width="content")
       st.session_state[GRAPH_ACTIVITY_CONFIG].initialize_nodes_container(graph_container)
     with col1:
-      message_container = st.container(key="message_container", height=500, border=False, gap="xxsmall")
+      message_container = st.container(key="message_container", border=False, height=500, gap="xxsmall")
       async_chat_with_user(message_container)
   else:
     st.warning(f"Please configure your application in sidebar. {config_missing_message()}")

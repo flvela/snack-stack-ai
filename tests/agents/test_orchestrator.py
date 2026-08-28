@@ -9,6 +9,7 @@ from agents.state import (
   MENU_AGENT_MESSAGES_FIELD,
   MENU_AGENT_NODE,
   MENU_AGENT_OUTPUT_FIELD,
+  MESSAGES_FIELD,
   ORDER_AGENT_MESSAGES_FIELD,
   ORDER_AGENT_NODE,
   ORDER_AGENT_OUTPUT_FIELD,
@@ -58,9 +59,11 @@ def test_orchestrator_node(user_input: str, expected_output: str):
 
 
 menu_agent_task = AgentTask(agent=MENU_AGENT_NODE,
-                            description="Can you recommend some dishes to me")
+                            description="User is asking for menu recommendations",
+                            user_input="Can you recommend some dishes to me")
 order_agent_task = AgentTask(agent=ORDER_AGENT_NODE,
-                             description="Check status of the user's order")
+                             description="User is asking for status of their order",
+                             user_input="Can you tell me the status of my order")
 
 test_dispatch_data = [
   [],
@@ -74,27 +77,29 @@ test_dispatch_data = [
 def test_dispatch_to_agents(tasks: List[AgentTask]):
   """unit test for dispatch to agents"""
   state = SnackStackState()
+  state[MESSAGES_FIELD] = []
   state[TASKS_FIELD] = tasks
+  state[REQUIRES_SYNTHESIS_FIELD] = False
   state[ORDER_AGENT_MESSAGES_FIELD] = [HumanMessage(content="hello")]
   sends = dispatch_to_agents(state)
   print(sends)
   assert len(sends) == len(tasks)
 
-  expected_worker_state = {
-    **state,
-    MENU_AGENT_MESSAGES_FIELD: [],
-    MENU_AGENT_OUTPUT_FIELD: "",
-    ORDER_AGENT_MESSAGES_FIELD: [],
-    ORDER_AGENT_OUTPUT_FIELD: "",
-    FINAL_RESPONSE_FIELD: "",
-  }
-  nodes = []
+  user_input_by_node = {}
   for send in sends:
-    nodes.append(send.node)
-    assert send.arg == expected_worker_state
+    user_input_by_node[send.node] = send.arg[USER_INPUT_FIELD]
+    assert send.arg[MESSAGES_FIELD] == state.get(MESSAGES_FIELD)
+    assert send.arg[TASKS_FIELD] == state[TASKS_FIELD]
+    assert send.arg[REQUIRES_SYNTHESIS_FIELD] == state[REQUIRES_SYNTHESIS_FIELD]
+    assert send.arg[MENU_AGENT_MESSAGES_FIELD] == []
+    assert send.arg[MENU_AGENT_OUTPUT_FIELD] == ""
+    assert send.arg[ORDER_AGENT_MESSAGES_FIELD] == []
+    assert send.arg[ORDER_AGENT_OUTPUT_FIELD] == ""
+    assert send.arg[FINAL_RESPONSE_FIELD] == ""
 
   expected_nodes = []
   for task in tasks:
+    assert user_input_by_node[task.agent] == task.user_input
     expected_nodes.append(task.agent)
 
-  assert nodes == expected_nodes
+  assert list(user_input_by_node) == expected_nodes
