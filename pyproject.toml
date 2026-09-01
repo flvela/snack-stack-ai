@@ -40,7 +40,7 @@ build-backend = "setuptools.build_meta"
 omit = [
   # omit jupyter notebooks and streamlit pages
   "src/jupyter/*",
-  "src/streamlit_pages/*"
+  "src/frontend/*"
 ]
 
 [tool.pytest.ini_options]
