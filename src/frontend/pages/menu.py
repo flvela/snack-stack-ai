@@ -5,7 +5,7 @@ import streamlit as st
 from frontend.utils.common import CONFIG_ERROR_MESSAGE, MENU_FILE_CONFIG, config_missing_message
 
 
-st.title("Snack Stack Menu", text_alignment="center")
+st.header("Snack Stack Menu", text_alignment="center")
 st.divider()
 
 uploaded_file = st.session_state[MENU_FILE_CONFIG]

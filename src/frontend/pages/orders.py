@@ -5,7 +5,7 @@ import streamlit as st
 from frontend.utils.common import CONFIG_ERROR_MESSAGE, ORDERS_FILE_CONFIG, config_missing_message
 
 
-st.title("Snack Stack Orders", text_alignment="center")
+st.header("Snack Stack Orders", text_alignment="center")
 st.divider()
 
 
