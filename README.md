@@ -46,10 +46,12 @@ For example "What type of italian food can I order?"
 ### 3. (Bonus) Self-learner exploring LangGraph, LangChain and Streamlit UI
 An engineer new to LangGraph graph engineering, LangChain agents or streamlit UI.
 They can look at the following code
-1. src/agents/* contains the LangGraph nodes and LangChain agents being build and used.
-2. src/frontend/* contains the streamlit UI application. (app.py is the main application entrypoint)
-3. src/snack_stack_graph.py contains the LangGraph graph building code
-4. src/assistant.py contains the SnackStack assistant class used to power the UI chat assistant.
+1. data/* menu and order mock data used for testing
+2. src/agents/* contains the LangGraph nodes and LangChain agents being build and used.
+3. src/frontend/* contains the streamlit UI application. (app.py is the main application entrypoint)
+4. src/tools/* tools used for loading files, vector DB and order and menu agent tool nodes
+5. src/snack_stack_graph.py contains the LangGraph graph building code
+6. src/assistant.py contains the SnackStack assistant class used to power the UI chat assistant.
 
 ### 4. (Bonus) Possible extension into retail
 It is not hard to imagine that this can be extended into any retail application by replacing menu for a restaurant
@@ -89,8 +91,8 @@ sequenceDiagram
   autonumber
   actor User
   participant UI as Streamlit UI
-  participant Assistant as LangGraph Assistant
-  participant SnackStackGraph as Graph
+  participant Assistant as SnackStack Assistant
+  participant SnackStackGraph as SnackStack Graph
   participant OrchestratorAgent as Orchestrator Agent
   participant MenuAgent as Menu Agent
   participant MenuAgentToolNode as Menu Agent Tool Node
