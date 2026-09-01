@@ -1,3 +1,4 @@
+"""Tests for orders tools function"""
 import pytest
 from tools.orders import ORDER_CUSTOMER, ORDER_EMAIL, ORDER_ID, ORDER_ITEM, ORDER_STATUS, ORDER_TRACKING, load_orders_documents
 

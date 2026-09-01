@@ -1,3 +1,4 @@
+"""Tests for menu tools functions"""
 from tools.menu import MENU_CUISINE, MENU_DIETARY, MENU_DISH, load_menu_documents
 
 

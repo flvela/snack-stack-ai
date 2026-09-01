@@ -25,6 +25,7 @@ dependencies = [
   "notebook",
   "deepagents",
   "ipython",
+  "pylint",
   "pytest",
   "pytest-asyncio",
   "python-dotenv",
