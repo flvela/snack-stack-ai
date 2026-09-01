@@ -9,7 +9,9 @@ EMBEDDINGS_MODEL_PROVIDER_CONFIG = "embeddings_model_provider"
 EMBEDDINGS_MODEL_API_KEY_CONFIG = "embeddings_model_api_key"
 EMBEDDINGS_MODEL_CONFIG = "embeddings_model"
 SNACK_STACK_ASSISTANT_CONFIG = "snack_stack_assistant"
+MENU_CONFIG = "menu_config"
 MENU_FILE_CONFIG = "menu_file_config"
+ORDERS_CONFIG = "orders_config"
 ORDERS_FILE_CONFIG = "orders_file_config"
 GRAPH_ACTIVITY_CONFIG = "graph_activity_config"
 REQUIRED_CONFIG = [
@@ -19,10 +21,12 @@ REQUIRED_CONFIG = [
   EMBEDDINGS_MODEL_PROVIDER_CONFIG,
   EMBEDDINGS_MODEL_API_KEY_CONFIG,
   EMBEDDINGS_MODEL_CONFIG,
-  MENU_FILE_CONFIG,
-  ORDERS_FILE_CONFIG
+  MENU_CONFIG,
+  ORDERS_CONFIG
 ]
 CONFIG_FAILED = "config_failed"
+
+CONFIG_ERROR_MESSAGE = "config_error_messages"
 
 # widget help messages
 MENU_FILE_HELP_MESSAGE = """json file expected. Here is an example entry:

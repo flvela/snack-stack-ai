@@ -16,7 +16,7 @@ from snack_stack_graph import (
   ORDER_AGENT_TOOL_NODE,
   SYNTHESIZER_AGENT_NODE
 )
-from streamlit_pages.graph_containers import (
+from frontend.components.graph_containers import (
   GraphActivityContainer,
   LANGRAPH_NODE_NAME,
   build_graph_state_placeholder

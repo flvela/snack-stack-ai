@@ -2,12 +2,13 @@
 import asyncio
 
 import streamlit as st
-from streamlit_pages.common import (
+from frontend.utils.common import (
+  CONFIG_ERROR_MESSAGE,
   GRAPH_ACTIVITY_CONFIG,
   config_missing_message,
   is_config_complete
 )
-from streamlit_pages.snack_stack_container import SnackStackActivityContainer
+from frontend.components.snack_stack_container import SnackStackActivityContainer
 
 # chat roles
 ASSISTANT_ROLE = "assistant"
@@ -76,7 +77,7 @@ def async_ai_assistant_page():
   """defines the streamlit AI Assistant chat page"""
   st.set_page_config(layout="wide")
 
-  st.header("Snack Stack AI Assistant", text_alignment="left")
+  st.header("Snack Stack AI Assistant", text_alignment="center")
   st.divider()
 
   if is_config_complete() and SNACK_STACK_ASSISTANT_CONFIG in st.session_state:
@@ -100,6 +101,8 @@ def async_ai_assistant_page():
       message_container = st.container(key="message_container", border=False, height=500, gap="xxsmall")
       async_chat_with_user(message_container)
   else:
+    if CONFIG_ERROR_MESSAGE in st.session_state:
+      st.error(st.session_state[CONFIG_ERROR_MESSAGE])
     st.warning(f"Please configure your application in sidebar. {config_missing_message()}")
 
 

@@ -2,7 +2,7 @@
 import json
 
 import streamlit as st
-from streamlit_pages.common import MENU_FILE_CONFIG, config_missing_message
+from frontend.utils.common import CONFIG_ERROR_MESSAGE, MENU_FILE_CONFIG, config_missing_message
 
 
 st.title("Snack Stack Menu", text_alignment="center")
@@ -10,7 +10,7 @@ st.divider()
 
 uploaded_file = st.session_state[MENU_FILE_CONFIG]
 if uploaded_file is not None:
-  menu_dict = json.load(uploaded_file)
+  menu_dict = json.loads(uploaded_file.getvalue())
   if menu_dict:
     menu_by_cuisine = {}
     for menu_entry in menu_dict:
@@ -30,4 +30,6 @@ if uploaded_file is not None:
           container.write(f"({menu_entry['Dietary']})")
           container.write(f"{menu_entry['Description']}")
 else:
+  if CONFIG_ERROR_MESSAGE in st.session_state:
+    st.error(st.session_state[CONFIG_ERROR_MESSAGE])
   st.warning(f"Menu file missing, configure application in sidebar\n. {config_missing_message()}")

@@ -128,7 +128,7 @@ pytest
 
 ### 7. Run Streamlit application
 ```
-streamlit run src/streamlit_pages/app.py
+streamlit run src/frontend/app.py
 ```
 
 ## Project Structure
@@ -150,15 +150,22 @@ SNACK-STACK-AI/                   #entire application
       synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
     jupyter/                      #contains jupyter notebooks
       graph_test.ipynb            #jupyter notebook (playground) for testing the snack-stack-ai app
-    streamlit_pages/              #streamlit application
+    frontend/                     #streamlit application
+      components/                 #frontend components
+        __init__.py               #package init file
+        graph_containers.py       #reusable LangGraph graph nodes, state and events classes that initialize and populate streamlit containers.
+        snack_stack_containers.py #concrete implementation for SnackStack AI graph containers
+      pages/
+        __init__.py               #package init file
+        menu.py                   #page displaying SnackStack menu used by AI assistant
+        chat.py                   #page with AI assistant conversation and Graph activity
+        orders.py                 #page displaying SnackStack orders used by AI assistant
+      utils/
+        __init__.py               #package init file
+        common.py                   #common methods and definitions
+        constants.py                #streamlit constants used by app.py
       __init__.py                 #package init file
       app.py                      #streamlit main page and app
-      chat.py                     #streamlin chat page with AI assistant conversation and Graph activity
-      common.py                   #common methods and definitions
-      constants.py                #streamlit constants used by app.py
-      graph_containers.py         #classes that initialize and populate streamlit containers with LangGraph graph nodes, state and events. It is reusable for other graphs
-      menu.py                     #simple streamlit page displaying SnackStack menu used by AI assistant
-      snack_stack_containers.py   #concrete implementation for SnackStack AI graph containers 
     testutils/                    #folder for unit testing utils and tools
       __init__.py                 #package init file
       common.py                   #common unit testing functions
