@@ -148,8 +148,6 @@ SNACK-STACK-AI/                   #entire application
       order_agent.py              #order agent and prompt
       state.py                    #the shared state that is passed between the LangGraph Nodes
       synthesizer.py              #synthesizer agent that puts together the output from menu and order agent
-    jupyter/                      #contains jupyter notebooks
-      graph_test.ipynb            #jupyter notebook (playground) for testing the snack-stack-ai app
     frontend/                     #streamlit application
       components/                 #frontend components
         __init__.py               #package init file
@@ -163,9 +161,10 @@ SNACK-STACK-AI/                   #entire application
       utils/
         __init__.py               #package init file
         common.py                   #common methods and definitions
-        constants.py                #streamlit constants used by app.py
       __init__.py                 #package init file
       app.py                      #streamlit main page and app
+    jupyter/                      #contains jupyter notebooks
+      graph_test.ipynb            #jupyter notebook (playground) for testing the snack-stack-ai app
     testutils/                    #folder for unit testing utils and tools
       __init__.py                 #package init file
       common.py                   #common unit testing functions
