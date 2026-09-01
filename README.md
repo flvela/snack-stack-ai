@@ -9,13 +9,20 @@
 > A voice enabled multi-agent food delivery assistent. It accepts queries through text or voice from a user. It specializes in menu searches and order status tracking
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Tech Stack](#tech-stack)
-3. [Quick Start](#-quick-start)
-4. [Project Structure](#project-structure)
+1. [The Problem](#the-problem)
+2. [Solution Overview](#solution-overview)
+3. [Who it is For and Use Cases](#who-it-is-for-and-use-cases)
+4. [Architecture](#architecture)
+5. [Tech Stack](#tech-stack)
+6. [Quick Start](#-quick-start)
+7. [Project Structure](#project-structure)
 
-## Overview
-A multi-agent food delivery and ordering assistent for a fictional company called SnackStack. The system performs the following operations:
+## The Problem
+A restaurant has data on its menu and the orders and needs a way to search and answer customer questions about the menu and orders. 
+
+## Solution Overview
+A multi-agent food delivery and ordering assistent for a fictional company called SnackStack. It is build using LangGraph. 
+The system performs the following operations:
 1. Accepts natural language queries via text input (and optionally voice)
 2. Routes queries to the correct specialist agent(s) using an LLM-powered orchestrator
 3. Searches a menu catalog using semantic search (RAG with ChromaDB)
@@ -24,6 +31,108 @@ A multi-agent food delivery and ordering assistent for a fictional company calle
 6. Merges responses from multiple agents into a single friendly reply
 7. Optionally supports voice input (Whisper STT) and voice output (OpenAI TTS)
 
+## Who it is For and Use Cases
+The SnackStack AI assistant can be used by the following people:
+
+### 1. Restaurant Worker
+Any worker at the restaurant that needs to answer customer questions regarding menu and order status. 
+For example someone can call the restaurant looking for status on their order and a restaurant worker 
+can quickly ask AI assistant for the answer.
+
+### 2. Restaurant customer
+Any potential customer can chat with the AI assistant to ask questions regarding menu and order status.
+For example "What type of italian food can I order?"
+
+### 3. (Bonus) Self-learner exploring LangGraph, LangChain and Streamlit UI
+An engineer new to LangGraph graph engineering, LangChain agents or streamlit UI.
+They can look at the following code
+1. src/agents/* contains the LangGraph nodes and LangChain agents being build and used.
+2. src/frontend/* contains the streamlit UI application. (app.py is the main application entrypoint)
+3. src/snack_stack_graph.py contains the LangGraph graph building code
+4. src/assistant.py contains the SnackStack assistant class used to power the UI chat assistant.
+
+### 4. (Bonus) Possible extension into retail
+It is not hard to imagine that this can be extended into any retail application by replacing menu for a restaurant
+with a product database do for a retail store and food orders with orders for any products the store has to offer.
+
+## Architecture
+### High Level System
+The high level data flow diagram depicts how user actions and provided data flow through the high level components of the system.
+
+```mermaid
+flowchart LR
+  User([User])
+  UI[Streamlit UI <br/> src/frontend/app.py]
+  Assistant[LangGraph Assistant <br/> src/assistant.py]
+  SnackStackGraph[Graph <br/> Orchestrator, Menu, Order and Synthesizer Agent Nodes <br/> src/snack_stack_graph.py]
+  MenuDB[(Menu DB <br/> src/tools/vector_store.py)]
+  ModelProvider@{ shape: cloud, label: "Third party model API <br/> src/.env or UI config"}
+
+  User -->|1. configures application| UI
+  User -->|2. uploads menu and orders data| UI
+  User -->|6. asks a question| UI
+  UI -->|3. creates menu DB| MenuDB
+  UI -->|4. initializes assistant| Assistant
+  UI -->|7. asks with user input| Assistant
+  Assistant -->|5. builds | SnackStackGraph
+  Assistant -->|8. queries with user input| SnackStackGraph
+  SnackStackGraph -->|9.b queries DB using Menu Agent tool| MenuDB
+  SnackStackGraph -->|9.a prompts LLM using model provider API| ModelProvider
+```
+### Question Flowchart
+The flow chart below shows what happens when a user asks a single question. 
+
+>&#128161; Orchestrator routes to Menu and Order Agent in parrallel if user question contains request for both menu and orders agents
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor User
+  participant UI as Streamlit UI
+  participant Assistant as LangGraph Assistant
+  participant SnackStackGraph as Graph
+  participant OrchestratorAgent as Orchestrator Agent
+  participant MenuAgent as Menu Agent
+  participant MenuAgentToolNode as Menu Agent Tool Node
+  participant MenuDB as Menu DB
+  participant OrderAgent as Order Agent
+  participant OrderAgentToolNode as Order Agent Tool Node
+  participant SynthesizerAgent as Synthesizer Agent
+
+  User->>UI: asks question
+  UI->>Assistant: asks
+  Assistant->>SnackStackGraph: queries 
+  SnackStackGraph->>OrchestratorAgent: sends user prompt
+  alt menu question
+    OrchestratorAgent->>MenuAgent: routes user prompt
+    MenuAgent->>MenuAgentToolNode: search menu
+    MenuAgentToolNode->>MenuDB: semantic search
+    MenuDB-)MenuAgentToolNode: menu results
+    MenuAgentToolNode-)MenuAgent: menu results
+    MenuAgent->>SynthesizerAgent: generated menu response
+  else order question
+    OrchestratorAgent->>OrderAgent: routes user prompt
+    opt question missing order key (order id, email or tracking number)
+      OrderAgent->>OrderAgentToolNode: get user input
+      OrderAgentToolNode-)SnackStackGraph: interrupts
+      SnackStackGraph-)Assistant: interrupts
+      Assistant-)UI:prompts user for oder key (order id, email or tracking number)
+      UI-)User:display prompt for order key
+      User->>UI:provides key
+      UI->>Assistant:provides key
+      Assistant->>SnackStackGraph:resume
+      SnackStackGraph->>OrderAgentToolNode:resume
+      OrderAgentToolNode-)OrderAgent: provides key
+    end
+    OrderAgent->>OrderAgentToolNode: search orders by key
+    OrderAgentToolNode-)OrderAgent: order results
+    OrderAgent->>SynthesizerAgent: generated order response
+  end
+  SynthesizerAgent->>SynthesizerAgent: formats menu and order agent responses
+  SynthesizerAgent-)SnackStackGraph: final response
+  SnackStackGraph-)Assistant: final response
+  Assistant-)UI: update conversation with final response
+```
 
 ## Tech Stack
 
