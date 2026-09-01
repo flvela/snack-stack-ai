@@ -28,8 +28,21 @@ def load_orders_documents(file_path: str) -> multi_key_dict:
   with open(file_path, 'r', encoding='utf-8') as file:
     orders = json.load(file)
 
+  return load_orders_documents_from_json(orders)
+
+
+def load_orders_documents_from_json(json_documents: list[dict]) -> multi_key_dict:
+  """
+  Load order documents from a JSON list.
+
+  Args:
+    json_documents (str): json list of orders
+  Returns
+    multi_key_dict: A multi-key dictionary of order documents,
+                    keyed by Order_ID, Order_Tracking, and Order_Email.
+  """
   documents = multi_key_dict()
-  for order in orders:
+  for order in json_documents:
     documents[order[ORDER_ID], order[ORDER_TRACKING], order[ORDER_EMAIL]] = order
 
   return documents

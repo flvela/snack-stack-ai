@@ -9,7 +9,7 @@ from langgraph.errors import GraphInterrupt
 import streamlit as st
 from streamlit.delta_generator import DeltaGenerator
 
-from streamlit_pages.common import format_time
+from frontend.utils.common import format_time
 
 # graph stream event types
 EVENT_ON_CHAIN_START = 'on_chain_start'
