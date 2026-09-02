@@ -135,6 +135,10 @@ sequenceDiagram
   SnackStackGraph-->>Assistant: final response
   Assistant-->>UI: update conversation with final response
 ```
+## Streamlit UI
+| Assistant Page                                      | Menu Page                                   | Orders Page                                     |
+|-----------------------------------------------------|---------------------------------------------|-------------------------------------------------|
+|![Assistant Page UI](data/images/assistant_page.png) | ![Menu Page UI](data/images/menu_page.png)  | ![Orders Page UI](data/images/orders_page.png)  |
 
 ## Tech Stack
 
