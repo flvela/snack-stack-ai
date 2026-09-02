@@ -13,9 +13,10 @@
 2. [Solution Overview](#solution-overview)
 3. [Who it is For and Use Cases](#who-it-is-for-and-use-cases)
 4. [Architecture](#architecture)
-5. [Tech Stack](#tech-stack)
-6. [Quick Start](#-quick-start)
-7. [Project Structure](#project-structure)
+5. [Streamlit UI](#streamlit-ui)
+6. [Tech Stack](#tech-stack)
+7. [Quick Start](#-quick-start)
+8. [Project Structure](#project-structure)
 
 ## The Problem
 A restaurant has data on its menu and the orders and needs a way to search and answer customer questions about the menu and orders. 
@@ -136,9 +137,12 @@ sequenceDiagram
   Assistant-->>UI: update conversation with final response
 ```
 ## Streamlit UI
-| Assistant Page                                      | Menu Page                                   | Orders Page                                     |
-|-----------------------------------------------------|---------------------------------------------|-------------------------------------------------|
-|![Assistant Page UI](data/images/assistant_page.png) | ![Menu Page UI](data/images/menu_page.png)  | ![Orders Page UI](data/images/orders_page.png)  |
+### Assistant Page
+![Assistant Page UI](data/images/assistant_page.png)
+### Menu Page
+![Menu Page UI](data/images/menu_page.png)
+### Orders Page
+![Orders Page UI](data/images/orders_page.png)
 
 ## Tech Stack
 
