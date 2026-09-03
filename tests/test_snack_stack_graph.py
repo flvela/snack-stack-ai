@@ -60,20 +60,22 @@ def test_build_graph():
   config = Config()
   llm = config.get_llm()
   graph, context = build_graph(orders=orders, menu_collection=menu_collection, llm=llm)
-  assert list(graph.get_graph().nodes.keys()) == expected_nodes
-  print(graph.get_graph().edges)
-  for edge in graph.get_graph().edges:
-    source_node = edge.source
-    target_node = edge.target
-    assert source_node in expected_edges
-    assert target_node in expected_edges[source_node]
-    attributes = expected_edges[source_node][target_node]
-    assert attributes[0] == edge.conditional
-    assert attributes[1] == edge.data
-  assert context.orders == orders
-  assert context.menu_collection == menu_collection
-  assert context.llm == llm
-  # cleanup
-  vector_store.delete_collection()
-  vector_store.close()
-  shutil.rmtree(persist_directory)
+  try:
+    assert list(graph.get_graph().nodes.keys()) == expected_nodes
+    print(graph.get_graph().edges)
+    for edge in graph.get_graph().edges:
+      source_node = edge.source
+      target_node = edge.target
+      assert source_node in expected_edges
+      assert target_node in expected_edges[source_node]
+      attributes = expected_edges[source_node][target_node]
+      assert attributes[0] == edge.conditional
+      assert attributes[1] == edge.data
+    assert context.orders == orders
+    assert context.menu_collection == menu_collection
+    assert context.llm == llm
+  finally:
+    # cleanup vector store if test passes or fails
+    vector_store.delete_collection()
+    vector_store.close()
+    shutil.rmtree(persist_directory)

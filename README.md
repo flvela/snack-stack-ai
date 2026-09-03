@@ -13,9 +13,10 @@
 2. [Solution Overview](#solution-overview)
 3. [Who it is For and Use Cases](#who-it-is-for-and-use-cases)
 4. [Architecture](#architecture)
-5. [Tech Stack](#tech-stack)
-6. [Quick Start](#-quick-start)
-7. [Project Structure](#project-structure)
+5. [Streamlit UI](#streamlit-ui)
+6. [Tech Stack](#tech-stack)
+7. [Quick Start](#-quick-start)
+8. [Project Structure](#project-structure)
 
 ## The Problem
 A restaurant has data on its menu and the orders and needs a way to search and answer customer questions about the menu and orders. 
@@ -109,32 +110,39 @@ sequenceDiagram
     OrchestratorAgent->>MenuAgent: routes user prompt
     MenuAgent->>MenuAgentToolNode: search menu
     MenuAgentToolNode->>MenuDB: semantic search
-    MenuDB-)MenuAgentToolNode: menu results
-    MenuAgentToolNode-)MenuAgent: menu results
+    MenuDB-->>MenuAgentToolNode: menu results
+    MenuAgentToolNode-->>MenuAgent: menu results
     MenuAgent->>SynthesizerAgent: generated menu response
   else order question
     OrchestratorAgent->>OrderAgent: routes user prompt
     opt question missing order key (order id, email or tracking number)
       OrderAgent->>OrderAgentToolNode: get user input
-      OrderAgentToolNode-)SnackStackGraph: interrupts
-      SnackStackGraph-)Assistant: interrupts
-      Assistant-)UI:prompts user for oder key (order id, email or tracking number)
-      UI-)User:display prompt for order key
+      OrderAgentToolNode-->>SnackStackGraph: interrupts
+      SnackStackGraph-->>Assistant: interrupts
+      Assistant-->>UI:prompts user for oder key (order id, email or tracking number)
+      UI-->>User:display prompt for order key
       User->>UI:provides key
       UI->>Assistant:provides key
       Assistant->>SnackStackGraph:resume
       SnackStackGraph->>OrderAgentToolNode:resume
-      OrderAgentToolNode-)OrderAgent: provides key
+      OrderAgentToolNode-->>OrderAgent: provides key
     end
     OrderAgent->>OrderAgentToolNode: search orders by key
-    OrderAgentToolNode-)OrderAgent: order results
+    OrderAgentToolNode-->>OrderAgent: order results
     OrderAgent->>SynthesizerAgent: generated order response
   end
   SynthesizerAgent->>SynthesizerAgent: formats menu and order agent responses
-  SynthesizerAgent-)SnackStackGraph: final response
-  SnackStackGraph-)Assistant: final response
-  Assistant-)UI: update conversation with final response
+  SynthesizerAgent-->>SnackStackGraph: final response
+  SnackStackGraph-->>Assistant: final response
+  Assistant-->>UI: update conversation with final response
 ```
+## Streamlit UI
+### Assistant Page
+![Assistant Page UI](data/images/assistant_page.png)
+### Menu Page
+![Menu Page UI](data/images/menu_page.png)
+### Orders Page
+![Orders Page UI](data/images/orders_page.png)
 
 ## Tech Stack
 

@@ -28,13 +28,15 @@ def test_ask(query: str, expected_answer_strings: list[str]):
                                   menu=load_menu_documents(MENU_DIRECTORY))
   answer = assistant.ask(query)
   print(answer)
-  assert answer is not None
-  if assistant.is_interrupted:
-    answer = assistant.ask("ORD-201")
-
-  for expected_string in expected_answer_strings:
-    assert expected_string.lower() in answer.lower()
-  assistant.shutdown()
+  try:
+    assert answer is not None
+    if assistant.is_interrupted:
+      answer = assistant.ask("ORD-201")
+    for expected_string in expected_answer_strings:
+      assert expected_string.lower() in answer.lower()
+  finally:
+    # shutdown cleaning up data store connection if test passes or fails
+    assistant.shutdown()
 
 
 def test_reset():
@@ -43,5 +45,9 @@ def test_reset():
                                   menu=load_menu_documents(MENU_DIRECTORY))
   thread_id = assistant.thread_id
   assistant.reset()
-  assert thread_id != assistant.thread_id
-  assistant.shutdown()
+  try:
+    assert thread_id != assistant.thread_id
+  finally:
+    # shutdown cleaning up data store connection if test passes or fails
+    print("cleaning up assistant")
+    assistant.shutdown()
