@@ -45,3 +45,6 @@ omit = [
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"  # Require explicit @pytest.mark.asyncio
+
+[tool.poetry]
+package-mode=false # do not install package for streamlit deploy
