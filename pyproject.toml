@@ -23,7 +23,6 @@ dependencies = [
   "langchain-openai",
   "multi-key-dict",
   "notebook",
-  "deepagents",
   "ipython",
   "pylint",
   "pytest",
