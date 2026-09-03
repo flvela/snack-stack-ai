@@ -6,7 +6,7 @@ authors = [
 ]
 description = "A voice-enabled multi-agent food delivery assistant powered by LangGraph."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<4.0"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -47,4 +47,8 @@ omit = [
 asyncio_mode = "strict"  # Require explicit @pytest.mark.asyncio
 
 [tool.poetry]
-package-mode=false # do not install package for streamlit deploy
+packages = [
+  { include="agents", from="src" },
+  { include="frontend", from="src" },
+  { include="tools", from="src" },
+]
