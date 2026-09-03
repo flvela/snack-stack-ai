@@ -20,12 +20,14 @@ def test_create_vector_store():
   documents = load_menu_documents('data/menu.json')
   collection = vector_store.get_create_collection(documents)
   test_chroma_store_data = [("Italian", 3), ("Vegan", 5)]
-  for entry in test_chroma_store_data:
-    query = entry[0]
-    k = entry[1]
-    results = collection.similarity_search(query, k=k)
-    assert len(results) == k, f"Expected {k} results for query '{query}'"
-  # cleanup
-  vector_store.delete_collection()
-  vector_store.close()
-  shutil.rmtree(PERSIST_DIRECTORY)
+  try:
+    for entry in test_chroma_store_data:
+      query = entry[0]
+      k = entry[1]
+      results = collection.similarity_search(query, k=k)
+      assert len(results) == k, f"Expected {k} results for query '{query}'"
+  finally:
+    # cleanup in case of test failure or pass
+    vector_store.delete_collection()
+    vector_store.close()
+    shutil.rmtree(PERSIST_DIRECTORY)
