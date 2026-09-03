@@ -35,8 +35,7 @@ def test_ask(query: str, expected_answer_strings: list[str]):
     for expected_string in expected_answer_strings:
       assert expected_string.lower() in answer.lower()
   finally:
-    #shutdown cleaning up data store connection
-    #in case of test failure
+    # shutdown cleaning up data store connection if test passes or fails
     assistant.shutdown()
 
 
@@ -49,7 +48,6 @@ def test_reset():
   try:
     assert thread_id != assistant.thread_id
   finally:
-    #shutdown cleaning up data store connection
-    #in case of test failure
+    # shutdown cleaning up data store connection if test passes or fails
     print("cleaning up assistant")
     assistant.shutdown()
